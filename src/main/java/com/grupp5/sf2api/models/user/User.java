@@ -1,20 +1,17 @@
-package com.grupp5.sf2api.models;
+package com.grupp5.sf2api.models.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-/*
-* User behöver kopplingen till Tickets för att fungera.
-* */
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
-@AllArgsConstructor
 public class User {
 
     @Id
@@ -26,6 +23,11 @@ public class User {
 
     @Column(nullable = false)
     private String passwordHash;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = true)
     private String sessionToken;
 
     // Constructors
@@ -34,6 +36,7 @@ public class User {
     public User(String email, String passwordHash) {
         this.email = email;
         this.passwordHash = passwordHash;
+        this.createdAt = LocalDateTime.now();
     }
 }
 
