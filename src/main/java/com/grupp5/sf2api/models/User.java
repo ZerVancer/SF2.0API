@@ -28,14 +28,6 @@ public class User {
     private String passwordHash;
     private String sessionToken;
 
-
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL
-    )
-    private List<Ticket> tickets;
-
-
     // Constructors
     protected User() {}
 
