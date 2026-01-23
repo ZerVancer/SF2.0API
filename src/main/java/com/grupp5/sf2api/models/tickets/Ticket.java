@@ -1,5 +1,7 @@
 package com.grupp5.sf2api.models.tickets;
 
+import com.grupp5.sf2api.models.theater.Theater;
+import com.grupp5.sf2api.models.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,25 +25,27 @@ public class Ticket {
     @Column(nullable = false)
     private Double price;
 
-    @Column(nullable = false)
-    private UUID userId;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     // @ManyToOne(optional = false)
     // private MovieSchedule movieSchedule;
 
-    @Column(nullable = false)
-    private UUID theaterId;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "theater_id")
+    private Theater theater;
 
     @Column(nullable = false)
     private int seatValue;
 
     protected Ticket() {}
 
-    public Ticket(Double price, UUID userId, UUID theaterId, int seatValue) {
+    public Ticket(Double price, User user, Theater theater, int seatValue) {
         this.bookedAt = LocalDateTime.now();
         this.price = price;
-        this.userId = userId;
-        this.theaterId = theaterId;
+        this.user = user;
+        this.theater = theater;
         this.seatValue = seatValue;
 
     }
