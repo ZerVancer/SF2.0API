@@ -21,7 +21,7 @@ public class Movie {
   private String title;
 
   @Column(nullable = false)
-  private int duration;
+  private int durationSeconds;
 
   @Column
   private String description;
@@ -29,9 +29,9 @@ public class Movie {
   // Constructor
   protected Movie() {}
 
-  public Movie(String title, int duration)  {
+  public Movie(String title, int durationSeconds)  {
     this.title = title;
-    this.duration = duration;
+    this.durationSeconds = durationSeconds;
   }
 
   public Movie(String title, int duration, String description) {
