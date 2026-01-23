@@ -18,7 +18,7 @@ import java.util.UUID;
 public class Theater {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private UUID theaterId;
 
     @Column (nullable = false)
     private String name;

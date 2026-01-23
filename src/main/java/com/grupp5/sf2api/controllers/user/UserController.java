@@ -7,6 +7,7 @@ import com.grupp5.sf2api.request.user.RegisterUserRequest;
 import com.grupp5.sf2api.request.user.UpdateUserRequest;
 import com.grupp5.sf2api.services.user.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class UserController {
 
         User newUser = userService.registerNewUser(user);
 
-        return ResponseEntity.ok(RegisterUserDto.from(newUser));
+        return ResponseEntity.status(HttpStatus.CREATED).body(RegisterUserDto.from(newUser));
     }
 
     @PutMapping("/update/{userid}")
@@ -38,7 +39,6 @@ public class UserController {
 
         User updatedUser = userService.updateUser(userid, request);
         return ResponseEntity.ok(updatedUser);
-
     }
 
     @GetMapping("/users")
