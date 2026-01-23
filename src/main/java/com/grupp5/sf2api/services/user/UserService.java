@@ -1,6 +1,5 @@
 package com.grupp5.sf2api.services.user;
 
-import com.grupp5.sf2api.dtos.user.DeletedUserDto;
 import com.grupp5.sf2api.exceptions.user.EmailIsEmptyException;
 import com.grupp5.sf2api.exceptions.user.PasswordIsEmptyException;
 import com.grupp5.sf2api.exceptions.user.UserAlreadyExistsException;
@@ -64,7 +63,7 @@ public class UserService implements IUserService {
     @Override
     public User deleteUser(UUID userid) {
         User user = userRepository.findById(userid)
-                .orElseThrow(() -> new UserDoesntExistException("User not foind in database!"));
+                .orElseThrow(() -> new UserDoesntExistException("User not found in database!"));
 
         userRepository.delete(user);
 

@@ -1,7 +1,6 @@
 package com.grupp5.sf2api.models.user;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
