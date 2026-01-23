@@ -1,4 +1,4 @@
-package com.grupp5.sf2api.models;
+package com.grupp5.sf2api.models.cinema;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
