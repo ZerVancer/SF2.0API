@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface IMovieService {
   Movie registerMovie(Movie movie);
-  void deleteMovie(Movie movie);
+  Movie deleteMovie(UUID movieId);
   Movie updateMovie(UUID movieId, UpdateMovieRequest request);
   List<Movie> getAllMovies();
 }
