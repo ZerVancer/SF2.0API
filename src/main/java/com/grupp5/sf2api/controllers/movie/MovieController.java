@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/movie")
 @AllArgsConstructor
 public class MovieController {
   private MovieService movieService;
 
-  @PostMapping("/register-movie")
+  @PostMapping("/register")
   public ResponseEntity<RegisterMovieDto> registerMovie(@RequestBody RegisterMovieRequest request) {
     Movie movie = new Movie(request.title(), request.durationSeconds(), request.description());
 
@@ -31,21 +31,21 @@ public class MovieController {
     return ResponseEntity.status(HttpStatus.CREATED).body(RegisterMovieDto.from(newMovie));
   }
 
-  @DeleteMapping("/delete-movie/{movieId}")
+  @DeleteMapping("/delete/{movieId}")
   public ResponseEntity<DeleteMovieDto> deleteMovie(@PathVariable UUID movieId) {
     Movie movie = movieService.deleteMovie(movieId);
 
     return ResponseEntity.ok(DeleteMovieDto.from(movie));
   }
 
-  @PutMapping("/update-movie/{movieId}")
+  @PutMapping("/update/{movieId}")
   public ResponseEntity<Movie> updateMovie(@PathVariable UUID movieId, @RequestBody UpdateMovieRequest request) {
     Movie movie = movieService.updateMovie(movieId, request);
 
     return ResponseEntity.ok(movie);
   }
 
-  @GetMapping("/get-all-movies")
+  @GetMapping("/get-all")
   public ResponseEntity<List<Movie>> getMovies() {
     return ResponseEntity.ok(movieService.getAllMovies());
   }

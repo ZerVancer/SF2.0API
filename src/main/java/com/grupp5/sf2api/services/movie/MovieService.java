@@ -19,7 +19,7 @@ public class MovieService implements IMovieService{
 
   @Override
   public Movie registerMovie(Movie movie) {
-    Optional<Movie> existingMovie = movieRepository.findById(movie.getMovieId());
+    Optional<Movie> existingMovie = movieRepository.findByMovieId(movie.getMovieId());
 
     if (existingMovie.isPresent()) throw new MovieAlreadyExistsException();
 
