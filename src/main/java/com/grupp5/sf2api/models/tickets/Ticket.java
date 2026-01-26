@@ -10,7 +10,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tickets")
+@Table(
+        name = "tickets",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"movie_name", "seat_value"})
+        }
+)
 @Getter
 @Setter
 public class Ticket {
@@ -19,34 +24,52 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID ticketId;
 
+    // Vill ha något mer än priset för biljetten för requests etc.
+    @Column(name = "movie_name",nullable = false)
+    private String movieName;
+
     @Column(nullable = false)
     private LocalDateTime bookedAt;
 
     @Column(nullable = false)
     private Double price;
 
+    /*
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    // @ManyToOne(optional = false)
-    // private MovieSchedule movieSchedule;
+    @ManyToOne(optional = false)
+    private MovieSchedule movieSchedule;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "theater_id")
     private Theater theater;
+    */
 
-    @Column(nullable = false)
+    @Column(name = "seat_value", nullable = false)
     private int seatValue;
 
     protected Ticket() {}
 
-    public Ticket(Double price, User user, Theater theater, int seatValue) {
+    // Placeholder för att testa endpointen utan allt på plats
+    // både i koden och databasen.
+    public Ticket(String movieName, Double price, int seatValue) {
+        this.movieName = movieName;
+        this.price = price;
+        this.seatValue = seatValue;
+        this.bookedAt = LocalDateTime.now();
+    }
+
+    // Ticket som ska användas i slutet
+    public Ticket(String movieName, Double price, User user, Theater theater, int seatValue) {
+        this.movieName = movieName;
         this.bookedAt = LocalDateTime.now();
         this.price = price;
+        /*
         this.user = user;
         this.theater = theater;
+        */
         this.seatValue = seatValue;
-
     }
 }
