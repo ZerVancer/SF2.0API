@@ -4,18 +4,22 @@ import com.grupp5.sf2api.exceptions.Movie.*;
 import com.grupp5.sf2api.models.movie.Movie;
 import com.grupp5.sf2api.repositories.movie.MovieRepository;
 import com.grupp5.sf2api.request.movie.UpdateMovieRequest;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
+@AllArgsConstructor
 public class MovieService implements IMovieService{
 
   private MovieRepository movieRepository;
 
   @Override
   public Movie registerMovie(Movie movie) {
-    Optional<Movie> existingMovie = movieRepository.findById(movie.getMovieId());
+    Optional<Movie> existingMovie = movieRepository.findByMovieId(movie.getMovieId());
 
     if (existingMovie.isPresent()) throw new MovieAlreadyExistsException();
 
@@ -29,8 +33,12 @@ public class MovieService implements IMovieService{
   }
 
   @Override
-  public void deleteMovie(Movie movie) {
-    movieRepository.delete(movie);
+  public Movie deleteMovie(UUID movieId) {
+    Movie movie = movieRepository.findById(movieId).orElse(null);
+
+    movieRepository.deleteById(movieId);
+
+    return movie;
   }
 
   @Override
