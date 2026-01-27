@@ -7,10 +7,9 @@ import com.grupp5.sf2api.services.movieScheduleService.MovieScheduleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -20,10 +19,18 @@ public class MovieScheduleController {
 
     @PostMapping("/register-schedule")
     public ResponseEntity<RegisterMovieScheduleDto> registerSchedule(@RequestBody RegisterMovieScheduleRequest request) {
-        MovieSchedule movieSchedule = new MovieSchedule(request.startTime(), request.movie(), request.theater());
+        MovieSchedule newMovieSchedule = movieScheduleService.registerNewMovieSchedule(
+                request.startTime(),
+                request.movieId(),
+                request.theaterId()
+        );
 
-        MovieSchedule newMovieSchedule = movieScheduleService.registerNewMovieSchedule(movieSchedule);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(RegisterMovieScheduleDto.from(newMovieSchedule));
+    }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(RegisterMovieScheduleDto.from(newMovieSchedule));
+    @GetMapping("/movie-schedules")
+    public ResponseEntity<List<MovieSchedule>> getAllMovieSchedules() {
+        return ResponseEntity.ok(movieScheduleService.getAllMovieSchedules());
     }
 }
