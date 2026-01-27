@@ -1,7 +1,11 @@
 package com.grupp5.sf2api.services.movieScheduleService;
 
+import com.grupp5.sf2api.exceptions.Movie.MovieDoesntExistException;
 import com.grupp5.sf2api.exceptions.movieSchedule.*;
+import com.grupp5.sf2api.exceptions.theater.TheaterDoesntExistException;
+import com.grupp5.sf2api.models.movie.Movie;
 import com.grupp5.sf2api.models.movieSchedule.MovieSchedule;
+import com.grupp5.sf2api.models.theater.Theater;
 import com.grupp5.sf2api.repositories.movie.MovieRepository;
 import com.grupp5.sf2api.repositories.movieSchedule.MovieScheduleRepository;
 import com.grupp5.sf2api.repositories.theater.TheaterRepository;
@@ -21,13 +25,20 @@ public class MovieScheduleService {
     private MovieRepository movieRepository;
 
     public MovieSchedule registerNewMovieSchedule(LocalDateTime startTime, UUID movieId, UUID theaterId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new MovieDoesntExistException());
+
+        Theater theater = theaterRepository.findById(theaterId)
+                .orElseThrow(() -> new TheaterDoesntExistException("Theater doesn't exist!"));
+
         MovieSchedule movieSchedule = new MovieSchedule(
                 startTime,
-                movieRepository.findByMovieId(movieId),
-                theaterRepository.findTheaterById(theaterId)
+                movie,
+                theater
         );
 
-        Optional<MovieSchedule> existingMovieSchedule = movieScheduleRepository.findById(movieSchedule.getMovieScheduleId());
+        Optional<MovieSchedule> existingMovieSchedule =
+                movieScheduleRepository.findById(movieSchedule.getMovieScheduleId());
 
         if (existingMovieSchedule.isPresent()) {
             throw new MovieScheduleAlreadyExistsException("Movie schedule already exists in database!");
@@ -36,6 +47,34 @@ public class MovieScheduleService {
         checkIfFieldsAreNull(movieSchedule);
 
         return movieScheduleRepository.save(movieSchedule);
+    }
+
+    public MovieSchedule updateMovieSchedule(UUID movieScheduleId, LocalDateTime startTime, UUID movieId, UUID theaterId) {
+        MovieSchedule movieSchedule = movieScheduleRepository.findById(movieScheduleId)
+                .orElseThrow(() -> new MovieScheduleDoesntExistException("Movie schedule doesn't exist!"));
+
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new MovieDoesntExistException());
+
+        Theater theater = theaterRepository.findById(theaterId)
+                .orElseThrow(() -> new TheaterDoesntExistException("Theater doesn't exist!"));
+
+        movieSchedule.setStartTime(startTime);
+        movieSchedule.setMovie(movie);
+        movieSchedule.setTheater(theater);
+
+        checkIfFieldsAreNull(movieSchedule);
+
+        return movieScheduleRepository.save(movieSchedule);
+    }
+
+    public MovieSchedule deleteMovieSchedule(UUID movieScheduleId) {
+        MovieSchedule movieSchedule = movieScheduleRepository.findById(movieScheduleId)
+                .orElseThrow(() -> new MovieScheduleDoesntExistException("Movie schedule doesn't exist!"));
+
+        movieScheduleRepository.deleteById(movieScheduleId);
+
+        return movieSchedule;
     }
 
     public List<MovieSchedule> getAllMovieSchedules() {

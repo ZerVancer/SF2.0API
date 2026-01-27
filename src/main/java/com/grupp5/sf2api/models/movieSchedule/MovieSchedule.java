@@ -23,15 +23,15 @@ public class MovieSchedule {
     private UUID movieScheduleId;
 
     @Column
-    LocalDateTime startTime;
+    private LocalDateTime startTime;
 
     @ManyToOne
     @JoinColumn(name = "movieId")
-    Movie movie;
+    private Movie movie;
 
     @ManyToOne
     @JoinColumn(name = "theaterId")
-    Theater theater;
+    private Theater theater;
 
     //Constructors
     public MovieSchedule(LocalDateTime startTime, Movie movie, Theater theater) {
