@@ -1,5 +1,6 @@
 package com.grupp5.sf2api.models.tickets;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.grupp5.sf2api.models.theater.Theater;
 import com.grupp5.sf2api.models.user.User;
 import jakarta.persistence.*;
@@ -13,9 +14,8 @@ import java.util.UUID;
 @Table(
         name = "tickets",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"movie_name", "seat_value"})
-        }
-)
+            @UniqueConstraint(columnNames = {"theater_id", "seat_value"})
+        })
 @Getter
 @Setter
 public class Ticket {
@@ -42,11 +42,13 @@ public class Ticket {
 
     @ManyToOne(optional = false)
     private MovieSchedule movieSchedule;
+    */
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "theater_id")
+    @JoinColumn(name = "theater_id", nullable = false)
+    @JsonBackReference
     private Theater theater;
-    */
+
 
     @Column(name = "seat_value", nullable = false)
     private int seatValue;
@@ -62,15 +64,15 @@ public class Ticket {
         this.bookedAt = LocalDateTime.now();
     }
 
-    // Ticket som ska användas i slutet
-    public Ticket(String movieName, Double price, User user, Theater theater, int seatValue) {
+    // Ticket som ska användas i slutet, lägg till User user i constructorn
+    public Ticket(String movieName, Double price, Theater theater, int seatValue) {
         this.movieName = movieName;
         this.bookedAt = LocalDateTime.now();
         this.price = price;
         /*
         this.user = user;
+         */
         this.theater = theater;
-        */
         this.seatValue = seatValue;
     }
 }

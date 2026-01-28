@@ -1,12 +1,16 @@
 package com.grupp5.sf2api.models.theater;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.grupp5.sf2api.models.cinema.Cinema;
+import com.grupp5.sf2api.models.tickets.Ticket;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -33,8 +37,16 @@ public class Theater {
     private int maxColumns;
 
     @ManyToOne
-    @JoinColumn(name = "cinemaId")
+    @JoinColumn(name = "cinema_id")
     private Cinema cinema;
+
+    @OneToMany(
+            mappedBy = "theater",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonManagedReference
+    private List<Ticket> tickets = new ArrayList<>();
 
     //Constructors
     public Theater(String name, int totalSeats, int maxRows, int maxColumns) {

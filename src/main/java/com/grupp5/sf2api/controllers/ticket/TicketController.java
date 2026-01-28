@@ -24,9 +24,8 @@ public class TicketController {
 
     @PostMapping("/create")
     public ResponseEntity<CreateTicketDto> createTicket(@RequestBody CreateTicketRequest request) {
-        Ticket ticket = new Ticket(request.movieName(), request.price(), request.seatValue());
 
-        Ticket newTicket = ticketService.createTicket(ticket);
+        Ticket newTicket = ticketService.createTicket(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(CreateTicketDto.from(newTicket));
     }
