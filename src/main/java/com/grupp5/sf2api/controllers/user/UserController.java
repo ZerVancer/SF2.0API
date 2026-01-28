@@ -1,6 +1,7 @@
 package com.grupp5.sf2api.controllers.user;
 
 import com.grupp5.sf2api.dtos.user.DeletedUserDto;
+import com.grupp5.sf2api.dtos.user.GetUserDto;
 import com.grupp5.sf2api.dtos.user.RegisterUserDto;
 import com.grupp5.sf2api.dtos.user.UpdatedUserDto;
 import com.grupp5.sf2api.models.user.User;
@@ -10,6 +11,7 @@ import com.grupp5.sf2api.services.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<GetUserDto>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
@@ -51,8 +53,8 @@ public class UserController {
     public ResponseEntity<DeletedUserDto> deleteUser(
             @PathVariable UUID userid
     ) {
-        User deletedUser = userService.deleteUser(userid);
+        DeletedUserDto deletedUser = userService.deleteUser(userid);
 
-        return ResponseEntity.ok(DeletedUserDto.from(deletedUser));
+        return ResponseEntity.ok(deletedUser);
     }
 }
