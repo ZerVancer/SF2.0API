@@ -29,7 +29,7 @@ public class MovieScheduleService {
                 .orElseThrow(() -> new MovieDoesntExistException());
 
         Theater theater = theaterRepository.findByTheaterId(theaterId)
-                .orElseThrow(() -> new TheaterDoesntExistException("Theater doesn't exist!"));
+                .orElseThrow(() -> new TheaterDoesntExistException());
 
         MovieSchedule movieSchedule = new MovieSchedule(
                 startTime,
@@ -57,7 +57,7 @@ public class MovieScheduleService {
                 .orElseThrow(() -> new MovieDoesntExistException());
 
         Theater theater = theaterRepository.findByTheaterId(theaterId)
-                .orElseThrow(() -> new TheaterDoesntExistException("Theater doesn't exist!"));
+                .orElseThrow(() -> new TheaterDoesntExistException());
 
         movieSchedule.setStartTime(startTime);
         movieSchedule.setMovie(movie);
