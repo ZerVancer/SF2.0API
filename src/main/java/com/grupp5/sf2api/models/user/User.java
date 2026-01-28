@@ -26,9 +26,10 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    /* Onödig om jag tänker rätt. Misstog mig i början vid setup-fasen.
     @Column(nullable = true)
     private String sessionToken;
-
+*/
     // Constructors
     protected User() {}
 

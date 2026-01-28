@@ -1,5 +1,7 @@
 package com.grupp5.sf2api.services.user;
 
+import com.grupp5.sf2api.dtos.user.DeletedUserDto;
+import com.grupp5.sf2api.dtos.user.GetUserDto;
 import com.grupp5.sf2api.exceptions.user.EmailIsEmptyException;
 import com.grupp5.sf2api.exceptions.user.PasswordIsEmptyException;
 import com.grupp5.sf2api.exceptions.user.UserAlreadyExistsException;
@@ -8,10 +10,10 @@ import com.grupp5.sf2api.models.user.User;
 import com.grupp5.sf2api.repositories.user.UserRepository;
 import com.grupp5.sf2api.request.user.UpdateUserRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,22 +21,24 @@ import java.util.UUID;
 public class UserService implements IUserService {
 
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User registerNewUser(User user) {
-        Optional<User> existingUser = userRepository.findByUserId(user.getUserId());
 
-        if (existingUser.isPresent()) {
-            throw new UserAlreadyExistsException("User already exists in database!");
-        }
-
-        if (user.getEmail().isEmpty()) {
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
             throw new EmailIsEmptyException("Email cannot be empty!");
         }
 
-        if (user.getPasswordHash().isEmpty()) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("User already exists in database");
+        }
+
+        if (user.getPasswordHash() == null || user.getPasswordHash().isBlank()) {
             throw new PasswordIsEmptyException("Password cannot be empty!");
         }
+
+        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
 
         return userRepository.save(user);
     }
@@ -49,25 +53,28 @@ public class UserService implements IUserService {
         }
 
         if (request.password() != null && !request.password().isBlank()) {
-            user.setPasswordHash(request.password());
+            user.setPasswordHash(passwordEncoder.encode(request.password()));
         }
 
         return userRepository.save(user);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<GetUserDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(GetUserDto::from)
+                .toList();
     }
 
     @Override
-    public User deleteUser(UUID userid) {
+    public DeletedUserDto deleteUser(UUID userid) {
         User user = userRepository.findById(userid)
                 .orElseThrow(() -> new UserDoesntExistException("User not found in database!"));
 
         userRepository.delete(user);
 
-        return user;
+        return DeletedUserDto.from(user);
     }
 
 
