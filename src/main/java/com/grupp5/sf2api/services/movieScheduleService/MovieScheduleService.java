@@ -25,10 +25,10 @@ public class MovieScheduleService {
     private MovieRepository movieRepository;
 
     public MovieSchedule registerNewMovieSchedule(LocalDateTime startTime, UUID movieId, UUID theaterId) {
-        Movie movie = movieRepository.findById(movieId)
+        Movie movie = movieRepository.findByMovieId(movieId)
                 .orElseThrow(() -> new MovieDoesntExistException());
 
-        Theater theater = theaterRepository.findById(theaterId)
+        Theater theater = theaterRepository.findByTheaterId(theaterId)
                 .orElseThrow(() -> new TheaterDoesntExistException("Theater doesn't exist!"));
 
         MovieSchedule movieSchedule = new MovieSchedule(
@@ -38,7 +38,7 @@ public class MovieScheduleService {
         );
 
         Optional<MovieSchedule> existingMovieSchedule =
-                movieScheduleRepository.findById(movieSchedule.getMovieScheduleId());
+                movieScheduleRepository.findByMovieScheduleId(movieSchedule.getMovieScheduleId());
 
         if (existingMovieSchedule.isPresent()) {
             throw new MovieScheduleAlreadyExistsException("Movie schedule already exists in database!");
@@ -50,13 +50,13 @@ public class MovieScheduleService {
     }
 
     public MovieSchedule updateMovieSchedule(UUID movieScheduleId, LocalDateTime startTime, UUID movieId, UUID theaterId) {
-        MovieSchedule movieSchedule = movieScheduleRepository.findById(movieScheduleId)
+        MovieSchedule movieSchedule = movieScheduleRepository.findByMovieScheduleId(movieScheduleId)
                 .orElseThrow(() -> new MovieScheduleDoesntExistException("Movie schedule doesn't exist!"));
 
-        Movie movie = movieRepository.findById(movieId)
+        Movie movie = movieRepository.findByMovieId(movieId)
                 .orElseThrow(() -> new MovieDoesntExistException());
 
-        Theater theater = theaterRepository.findById(theaterId)
+        Theater theater = theaterRepository.findByTheaterId(theaterId)
                 .orElseThrow(() -> new TheaterDoesntExistException("Theater doesn't exist!"));
 
         movieSchedule.setStartTime(startTime);
@@ -69,7 +69,7 @@ public class MovieScheduleService {
     }
 
     public MovieSchedule deleteMovieSchedule(UUID movieScheduleId) {
-        MovieSchedule movieSchedule = movieScheduleRepository.findById(movieScheduleId)
+        MovieSchedule movieSchedule = movieScheduleRepository.findByMovieScheduleId(movieScheduleId)
                 .orElseThrow(() -> new MovieScheduleDoesntExistException("Movie schedule doesn't exist!"));
 
         movieScheduleRepository.deleteById(movieScheduleId);

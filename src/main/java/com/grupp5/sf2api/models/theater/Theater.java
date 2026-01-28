@@ -33,7 +33,7 @@ public class Theater {
     private int maxColumns;
 
     @ManyToOne
-    @JoinColumn(name = "cinema_id")
+    @JoinColumn(name = "cinemaId")
     private Cinema cinema;
 
     //Constructors
