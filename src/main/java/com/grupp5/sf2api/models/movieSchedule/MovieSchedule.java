@@ -26,11 +26,11 @@ public class MovieSchedule {
     private LocalDateTime startTime;
 
     @ManyToOne
-    @JoinColumn(name = "movieId")
+    @JoinColumn(name = "movie_id")
     private Movie movie;
 
     @ManyToOne
-    @JoinColumn(name = "theaterId")
+    @JoinColumn(name = "theater_id")
     private Theater theater;
 
     //Constructors

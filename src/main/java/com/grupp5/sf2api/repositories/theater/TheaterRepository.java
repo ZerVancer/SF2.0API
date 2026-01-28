@@ -8,5 +8,4 @@ import java.util.UUID;
 
 @Repository
 public interface TheaterRepository extends JpaRepository<Theater, UUID> {
-    Theater findTheaterById(UUID id);
 }
