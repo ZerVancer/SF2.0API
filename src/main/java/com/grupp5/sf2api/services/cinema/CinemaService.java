@@ -21,7 +21,7 @@ public class CinemaService implements ICinemaService{
   private CinemaRepository cinemaRepository;
 
   @Override
-  public Cinema registerMovie(Cinema cinema) {
+  public Cinema registerCinema(Cinema cinema) {
     Optional<Cinema> existingCinema = cinemaRepository.findByCinemaId(cinema.getCinemaId());
 
     if (existingCinema.isPresent()) throw new CinemaAlreadyExistsException();
@@ -34,7 +34,7 @@ public class CinemaService implements ICinemaService{
   }
 
   @Override
-  public Cinema deleteMovie(UUID cinemaId) {
+  public Cinema deleteCinema(UUID cinemaId) {
     Cinema cinema = cinemaRepository.findByCinemaId(cinemaId).orElse(null);
 
     cinemaRepository.deleteById(cinemaId);
@@ -43,7 +43,7 @@ public class CinemaService implements ICinemaService{
   }
 
   @Override
-  public Cinema updateMovie(UUID cinemaId, UpdateCinemaRequest request) {
+  public Cinema updateCinema(UUID cinemaId, UpdateCinemaRequest request) {
     Cinema cinema = cinemaRepository.findByCinemaId(cinemaId).orElseThrow(CinemaDoesntExistException::new);
 
     if (request.name() != null && !request.name().isBlank()) cinema.setName(request.name());
@@ -54,7 +54,7 @@ public class CinemaService implements ICinemaService{
   }
 
   @Override
-  public List<Cinema> getAllMovies() {
-    return List.of();
+  public List<Cinema> getAllCinemas() {
+    return cinemaRepository.findAll();
   }
 }
