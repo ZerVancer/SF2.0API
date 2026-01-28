@@ -1,6 +1,6 @@
 package com.grupp5.sf2api.services.movieScheduleService;
 
-import com.grupp5.sf2api.exceptions.Movie.MovieDoesntExistException;
+import com.grupp5.sf2api.exceptions.movie.MovieDoesntExistException;
 import com.grupp5.sf2api.exceptions.movieSchedule.*;
 import com.grupp5.sf2api.exceptions.theater.TheaterDoesntExistException;
 import com.grupp5.sf2api.models.movie.Movie;

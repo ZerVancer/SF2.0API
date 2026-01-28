@@ -1,6 +1,6 @@
 package com.grupp5.sf2api.services.movie;
 
-import com.grupp5.sf2api.exceptions.Movie.*;
+import com.grupp5.sf2api.exceptions.movie.*;
 import com.grupp5.sf2api.models.movie.Movie;
 import com.grupp5.sf2api.repositories.movie.MovieRepository;
 import com.grupp5.sf2api.request.movie.UpdateMovieRequest;
@@ -23,11 +23,11 @@ public class MovieService implements IMovieService{
 
     if (existingMovie.isPresent()) throw new MovieAlreadyExistsException();
 
-    if (movie.getTitle().isBlank()) throw new TitleIsEmptyException();
+    if (movie.getTitle().isBlank()) throw new MovieTitleIsEmptyException();
 
-    if (movie.getDurationSeconds()==0) throw new DurationIsZeroException();
+    if (movie.getDurationSeconds()==0) throw new MovieDurationIsZeroException();
 
-    if (movie.getDurationSeconds()<0) throw new DurationIsNegativeException();
+    if (movie.getDurationSeconds()<0) throw new MovieDurationIsNegativeException();
 
     return movieRepository.save(movie);
   }
