@@ -2,14 +2,13 @@ package com.grupp5.sf2api.controllers.movie;
 
 import com.grupp5.sf2api.dtos.movie.DeleteMovieDto;
 import com.grupp5.sf2api.dtos.movie.RegisterMovieDto;
+import com.grupp5.sf2api.dtos.movie.UpdateMovieDto;
 import com.grupp5.sf2api.models.movie.Movie;
 import com.grupp5.sf2api.request.movie.RegisterMovieRequest;
 import com.grupp5.sf2api.request.movie.UpdateMovieRequest;
 import com.grupp5.sf2api.services.movie.MovieService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,10 +38,10 @@ public class MovieController {
   }
 
   @PutMapping("/update/{movieId}")
-  public ResponseEntity<Movie> updateMovie(@PathVariable UUID movieId, @RequestBody UpdateMovieRequest request) {
+  public ResponseEntity<UpdateMovieDto> updateMovie(@PathVariable UUID movieId, @RequestBody UpdateMovieRequest request) {
     Movie movie = movieService.updateMovie(movieId, request);
 
-    return ResponseEntity.ok(movie);
+    return ResponseEntity.ok(UpdateMovieDto.from(movie));
   }
 
   @GetMapping("/get-all")

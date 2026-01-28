@@ -2,6 +2,7 @@ package com.grupp5.sf2api.controllers.user;
 
 import com.grupp5.sf2api.dtos.user.DeletedUserDto;
 import com.grupp5.sf2api.dtos.user.RegisterUserDto;
+import com.grupp5.sf2api.dtos.user.UpdatedUserDto;
 import com.grupp5.sf2api.models.user.User;
 import com.grupp5.sf2api.request.user.RegisterUserRequest;
 import com.grupp5.sf2api.request.user.UpdateUserRequest;
@@ -32,13 +33,13 @@ public class UserController {
     }
 
     @PutMapping("/update/{userid}")
-    public ResponseEntity<User> updateUser(
+    public ResponseEntity<UpdatedUserDto> updateUser(
             @PathVariable UUID userid,
             @RequestBody UpdateUserRequest request
             ) {
 
         User updatedUser = userService.updateUser(userid, request);
-        return ResponseEntity.ok(updatedUser);
+        return ResponseEntity.ok(UpdatedUserDto.from(updatedUser));
     }
 
     @GetMapping("/users")
