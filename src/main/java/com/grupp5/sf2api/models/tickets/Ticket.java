@@ -25,6 +25,7 @@ public class Ticket {
     private UUID ticketId;
 
     // Vill ha något mer än priset för biljetten för requests etc.
+    // Ta bort efter movie har en koppling till ticket.
     @Column(name = "movie_name",nullable = false)
     private String movieName;
 

@@ -10,7 +10,6 @@ import java.util.UUID;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, UUID> {
     Optional<Ticket> findByTicketId(UUID ticketId);
-    boolean existsByMovieNameAndSeatValue(String movieName, int seatValue);
+    boolean existsByMovieNameAndSeatValueAndTicketIdNot(String movieName, int seatValue, UUID ticketId);
 
-    boolean existsByMovieNameAndSeatValueAndTicketId(String movieName, int seatValue, UUID ticketId);
 }

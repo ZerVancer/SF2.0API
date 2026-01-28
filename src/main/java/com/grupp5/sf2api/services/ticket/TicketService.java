@@ -62,12 +62,9 @@ public class TicketService implements ITicketService {
             throw new TicketSeatValueIsZeroOrBelowException();
         }
 
+        // change to theaterid instead of ticketid for later.
         boolean seatAlreadyBooked =
-                ticketRepository.existsByMovieNameAndSeatValueAndTicketId(
-                        movieName,
-                        seatValue,
-                        ticket.getTicketId()
-                );
+                ticketRepository.existsByMovieNameAndSeatValueAndTicketIdNot(movieName,seatValue,ticketId);
 
         if (seatAlreadyBooked) {
             throw new TicketSeatIsAlreadyBookedException();
