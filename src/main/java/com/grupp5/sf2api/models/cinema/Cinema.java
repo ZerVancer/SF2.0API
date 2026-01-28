@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Cinema {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private UUID cinemaId;
 
     @Column(nullable = false)
     private String name;
