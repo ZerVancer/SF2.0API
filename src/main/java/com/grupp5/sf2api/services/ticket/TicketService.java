@@ -1,14 +1,17 @@
 package com.grupp5.sf2api.services.ticket;
 
 import com.grupp5.sf2api.exceptions.Ticket.*;
+import com.grupp5.sf2api.exceptions.theater.TheaterDoesntExistException;
+import com.grupp5.sf2api.models.theater.Theater;
 import com.grupp5.sf2api.models.tickets.Ticket;
+import com.grupp5.sf2api.repositories.theater.TheaterRepository;
 import com.grupp5.sf2api.repositories.ticket.TicketRepository;
+import com.grupp5.sf2api.request.ticket.CreateTicketRequest;
 import com.grupp5.sf2api.request.ticket.UpdateTicketRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -16,28 +19,33 @@ import java.util.UUID;
 public class TicketService implements ITicketService {
 
     private TicketRepository ticketRepository;
+    private final TheaterRepository theaterRepository;
 
     @Override
-    public Ticket createTicket(Ticket ticket) {
-        Optional<Ticket> existingTicket = ticketRepository.findByTicketId(ticket.getTicketId());
+    public Ticket createTicket(CreateTicketRequest request) {
+        Theater theater = theaterRepository.findByTheaterId(request.theaterId())
+                .orElseThrow(() -> new TheaterDoesntExistException());
 
-        if (existingTicket.isPresent()) {
-            throw new TicketAlreadyExistsException();
-        }
-
-        boolean seatBooked = ticketRepository.existsByMovieNameAndSeatValueAndTicketIdNot(ticket.getMovieName(), ticket.getSeatValue(), ticket.getTicketId());
+        boolean seatBooked = ticketRepository.existsByTheaterAndSeatValue(theater, request.seatValue());
 
         if (seatBooked) {
             throw new TicketSeatIsAlreadyBookedException();
         }
 
-        if (ticket.getMovieName().isBlank()) {
+        if (request.movieName() == null || request.movieName().isBlank()) {
             throw new TicketMovieNameIsBlankException();
         }
 
-        if (ticket.getPrice() == null || ticket.getPrice() <= 0) {
+        if (request.price() == null ||request.price() <= 0) {
             throw new TicketPriceIsZeroOrBelowException();
         }
+
+        Ticket ticket = new Ticket(
+                request.movieName(),
+                request.price(),
+                theater,
+                request.seatValue()
+        );
 
         return ticketRepository.save(ticket);
     }
@@ -45,26 +53,20 @@ public class TicketService implements ITicketService {
     @Override
     public Ticket updateTicket(UUID ticketId, UpdateTicketRequest request) {
 
-        Ticket ticket = ticketRepository.findByTicketId(ticketId)
+        Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(TicketDontExistsException::new);
 
-        String movieName =
-                request.movieName() != null
-                        ? request.movieName()
-                        : ticket.getMovieName();
-
-        int seatValue =
-                request.seatValue() != null
-                        ? request.seatValue()
-                        : ticket.getSeatValue();
+        int newSeatValue = request.seatValue() != null ? request.seatValue() : ticket.getSeatValue();
 
         if (request.seatValue() != null && request.seatValue() <= 0) {
             throw new TicketSeatValueIsZeroOrBelowException();
         }
 
-        // change to theaterid instead of ticketid for later.
-        boolean seatAlreadyBooked =
-                ticketRepository.existsByMovieNameAndSeatValueAndTicketIdNot(movieName,seatValue,ticketId);
+        boolean seatAlreadyBooked = ticketRepository.existsByTheaterAndSeatValueAndTicketIdNot(
+                ticket.getTheater(),
+                newSeatValue,
+                ticket.getTicketId()
+        );
 
         if (seatAlreadyBooked) {
             throw new TicketSeatIsAlreadyBookedException();
@@ -88,7 +90,7 @@ public class TicketService implements ITicketService {
 
     @Override
     public Ticket deleteTicket(UUID ticketid) {
-        Ticket ticket = ticketRepository.findByTicketId(ticketid)
+        Ticket ticket = ticketRepository.findById(ticketid)
                 .orElseThrow(() -> new TicketDontExistsException());
 
         ticketRepository.delete(ticket);
