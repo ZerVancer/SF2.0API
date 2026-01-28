@@ -25,7 +25,7 @@ public class TicketService implements ITicketService {
             throw new TicketAlreadyExistsException();
         }
 
-        boolean seatBooked = ticketRepository.existsByMovieNameAndSeatValue(ticket.getMovieName(), ticket.getSeatValue());
+        boolean seatBooked = ticketRepository.existsByMovieNameAndSeatValueAndTicketIdNot(ticket.getMovieName(), ticket.getSeatValue(), ticket.getTicketId());
 
         if (seatBooked) {
             throw new TicketSeatIsAlreadyBookedException();
