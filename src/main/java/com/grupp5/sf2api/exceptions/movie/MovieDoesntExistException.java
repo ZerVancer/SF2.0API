@@ -1,4 +1,4 @@
-package com.grupp5.sf2api.exceptions.Movie;
+package com.grupp5.sf2api.exceptions.movie;
 
 public class MovieDoesntExistException extends RuntimeException {
   public MovieDoesntExistException() {
