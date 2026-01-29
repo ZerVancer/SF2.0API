@@ -2,10 +2,13 @@ package com.grupp5.sf2api.services.ticket;
 
 import com.grupp5.sf2api.exceptions.Ticket.*;
 import com.grupp5.sf2api.exceptions.theater.TheaterDoesntExistException;
+import com.grupp5.sf2api.exceptions.user.UserDoesntExistException;
 import com.grupp5.sf2api.models.theater.Theater;
 import com.grupp5.sf2api.models.tickets.Ticket;
+import com.grupp5.sf2api.models.user.User;
 import com.grupp5.sf2api.repositories.theater.TheaterRepository;
 import com.grupp5.sf2api.repositories.ticket.TicketRepository;
+import com.grupp5.sf2api.repositories.user.UserRepository;
 import com.grupp5.sf2api.request.ticket.CreateTicketRequest;
 import com.grupp5.sf2api.request.ticket.UpdateTicketRequest;
 import lombok.AllArgsConstructor;
@@ -20,6 +23,7 @@ public class TicketService implements ITicketService {
 
     private TicketRepository ticketRepository;
     private final TheaterRepository theaterRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Ticket createTicket(CreateTicketRequest request) {
@@ -27,6 +31,9 @@ public class TicketService implements ITicketService {
                 .orElseThrow(() -> new TheaterDoesntExistException());
 
         boolean seatBooked = ticketRepository.existsByTheaterAndSeatValue(theater, request.seatValue());
+
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new UserDoesntExistException());
 
         if (seatBooked) {
             throw new TicketSeatIsAlreadyBookedException();
@@ -44,6 +51,7 @@ public class TicketService implements ITicketService {
                 request.movieName(),
                 request.price(),
                 theater,
+                user,
                 request.seatValue()
         );
 

@@ -2,11 +2,14 @@ package com.grupp5.sf2api.services.user;
 
 import com.grupp5.sf2api.dtos.user.DeletedUserDto;
 import com.grupp5.sf2api.dtos.user.GetUserDto;
+import com.grupp5.sf2api.dtos.user.UserAndTicketsDto;
 import com.grupp5.sf2api.exceptions.user.EmailIsEmptyException;
 import com.grupp5.sf2api.exceptions.user.PasswordIsEmptyException;
 import com.grupp5.sf2api.exceptions.user.UserAlreadyExistsException;
 import com.grupp5.sf2api.exceptions.user.UserDoesntExistException;
+import com.grupp5.sf2api.models.tickets.Ticket;
 import com.grupp5.sf2api.models.user.User;
+import com.grupp5.sf2api.repositories.ticket.TicketRepository;
 import com.grupp5.sf2api.repositories.user.UserRepository;
 import com.grupp5.sf2api.request.user.UpdateUserRequest;
 import lombok.AllArgsConstructor;
@@ -21,6 +24,7 @@ import java.util.UUID;
 public class UserService implements IUserService {
 
     private UserRepository userRepository;
+    private TicketRepository ticketRepository;
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -46,7 +50,7 @@ public class UserService implements IUserService {
     @Override
     public User updateUser(UUID userid, UpdateUserRequest request) {
         User user = userRepository.findById(userid)
-                .orElseThrow(() -> new UserDoesntExistException("User not found in database!"));
+                .orElseThrow(() -> new UserDoesntExistException());
 
         if (request.email() != null && !request.email().isBlank()) {
             user.setEmail(request.email());
@@ -70,12 +74,19 @@ public class UserService implements IUserService {
     @Override
     public DeletedUserDto deleteUser(UUID userid) {
         User user = userRepository.findById(userid)
-                .orElseThrow(() -> new UserDoesntExistException("User not found in database!"));
+                .orElseThrow(() -> new UserDoesntExistException());
 
         userRepository.delete(user);
 
         return DeletedUserDto.from(user);
     }
 
+    @Override
+    public List<UserAndTicketsDto> getAllTickets(UUID userid) {
+        User user = userRepository.findById(userid)
+                .orElseThrow(() -> new UserDoesntExistException());
+
+        return List.of(UserAndTicketsDto.from(user));
+    }
 
 }

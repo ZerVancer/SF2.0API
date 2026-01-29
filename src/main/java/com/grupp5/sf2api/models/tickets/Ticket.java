@@ -36,10 +36,6 @@ public class Ticket {
     private Double price;
 
     /*
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @ManyToOne(optional = false)
     private MovieSchedule movieSchedule;
     */
@@ -49,6 +45,10 @@ public class Ticket {
     @JsonBackReference
     private Theater theater;
 
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private User user;
 
     @Column(name = "seat_value", nullable = false)
     private int seatValue;
@@ -65,13 +65,11 @@ public class Ticket {
     }
 
     // Ticket som ska användas i slutet, lägg till User user i constructorn
-    public Ticket(String movieName, Double price, Theater theater, int seatValue) {
+    public Ticket(String movieName, Double price, Theater theater, User user, int seatValue) {
         this.movieName = movieName;
         this.bookedAt = LocalDateTime.now();
         this.price = price;
-        /*
         this.user = user;
-         */
         this.theater = theater;
         this.seatValue = seatValue;
     }

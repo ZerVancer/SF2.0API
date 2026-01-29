@@ -1,10 +1,13 @@
 package com.grupp5.sf2api.models.user;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.grupp5.sf2api.models.tickets.Ticket;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,10 +29,14 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    /* Onödig om jag tänker rätt. Misstog mig i början vid setup-fasen.
-    @Column(nullable = true)
-    private String sessionToken;
-*/
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonManagedReference
+    private List<Ticket> tickets;
+
     // Constructors
     protected User() {}
 

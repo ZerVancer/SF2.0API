@@ -6,6 +6,7 @@ public record CreateTicketRequest(
         String movieName,
         Double price,
         int seatValue,
-        UUID theaterId // <- för att skapa kopplingen till theater
+        UUID userId, // <- För att skapa kopplingen till user
+        UUID theaterId // <- För att skapa kopplingen till theater
 ) {
 }

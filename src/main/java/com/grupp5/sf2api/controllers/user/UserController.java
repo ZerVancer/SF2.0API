@@ -1,9 +1,6 @@
 package com.grupp5.sf2api.controllers.user;
 
-import com.grupp5.sf2api.dtos.user.DeletedUserDto;
-import com.grupp5.sf2api.dtos.user.GetUserDto;
-import com.grupp5.sf2api.dtos.user.RegisterUserDto;
-import com.grupp5.sf2api.dtos.user.UpdatedUserDto;
+import com.grupp5.sf2api.dtos.user.*;
 import com.grupp5.sf2api.models.user.User;
 import com.grupp5.sf2api.request.user.RegisterUserRequest;
 import com.grupp5.sf2api.request.user.UpdateUserRequest;
@@ -56,5 +53,12 @@ public class UserController {
         DeletedUserDto deletedUser = userService.deleteUser(userid);
 
         return ResponseEntity.ok(deletedUser);
+    }
+
+    @GetMapping("/tickets/{userid}")
+    public ResponseEntity<List<UserAndTicketsDto>> getAllTicketsForUser(
+            @PathVariable UUID userid
+    ) {
+        return ResponseEntity.ok(userService.getAllTickets(userid));
     }
 }
