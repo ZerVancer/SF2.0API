@@ -7,7 +7,6 @@ import java.util.UUID;
 
 public record DeleteTicketDto(
         UUID ticketId,
-        String movieName,
         LocalDateTime bookedAt,
         double price,
         int seatValue
@@ -15,7 +14,6 @@ public record DeleteTicketDto(
     public static DeleteTicketDto from(Ticket ticket) {
         return new DeleteTicketDto(
                 ticket.getTicketId(),
-                ticket.getMovieName(),
                 ticket.getBookedAt(),
                 ticket.getPrice(),
                 ticket.getSeatValue());
