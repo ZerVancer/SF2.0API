@@ -1,7 +1,10 @@
 package com.grupp5.sf2api.services.theater;
 
+import com.grupp5.sf2api.exceptions.cinema.CinemaDoesntExistException;
 import com.grupp5.sf2api.exceptions.theater.TheaterDoesntExistException;
+import com.grupp5.sf2api.models.cinema.Cinema;
 import com.grupp5.sf2api.models.theater.Theater;
+import com.grupp5.sf2api.repositories.cinema.CinemaRepository;
 import com.grupp5.sf2api.repositories.theater.TheaterRepository;
 import com.grupp5.sf2api.request.theater.UpdateTheaterRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import java.util.UUID;
 public class TheaterService implements ITheaterService {
 
     private final TheaterRepository theaterRepository;
+    private final CinemaRepository cinemaRepository;
 
     @Override
     public Theater createTheater(Theater theater) {
@@ -41,6 +45,9 @@ public class TheaterService implements ITheaterService {
         if (request.maxColumns() > 0) {
             theaterExists.setMaxColumns(request.maxColumns());
         }
+
+        Cinema cinema = cinemaRepository.findByCinemaId(request.cinemaId()).orElseThrow(CinemaDoesntExistException::new);
+        theaterExists.setCinema(cinema);
 
         return theaterRepository.save(theaterExists);
         }

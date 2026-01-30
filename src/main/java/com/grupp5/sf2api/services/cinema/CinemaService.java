@@ -5,7 +5,9 @@ import com.grupp5.sf2api.exceptions.cinema.CinemaDoesntExistException;
 import com.grupp5.sf2api.exceptions.cinema.CinemaLocationIsEmptyException;
 import com.grupp5.sf2api.exceptions.cinema.CinemaNameIsEmptyException;
 import com.grupp5.sf2api.models.cinema.Cinema;
+import com.grupp5.sf2api.models.movieSchedule.MovieSchedule;
 import com.grupp5.sf2api.repositories.cinema.CinemaRepository;
+import com.grupp5.sf2api.repositories.movieSchedule.MovieScheduleRepository;
 import com.grupp5.sf2api.request.cinema.UpdateCinemaRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class CinemaService implements ICinemaService{
 
   private CinemaRepository cinemaRepository;
+  private MovieScheduleRepository movieScheduleRepository;
 
   @Override
   public Cinema registerCinema(Cinema cinema) {
@@ -56,5 +59,10 @@ public class CinemaService implements ICinemaService{
   @Override
   public List<Cinema> getAllCinemas() {
     return cinemaRepository.findAll();
+  }
+
+  @Override
+  public List<MovieSchedule> getSchedule(UUID cinemaId) {
+    return movieScheduleRepository.findAllByTheater_Cinema_CinemaId(cinemaId);
   }
 }

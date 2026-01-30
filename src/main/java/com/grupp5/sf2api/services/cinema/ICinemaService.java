@@ -1,6 +1,7 @@
 package com.grupp5.sf2api.services.cinema;
 
 import com.grupp5.sf2api.models.cinema.Cinema;
+import com.grupp5.sf2api.models.movieSchedule.MovieSchedule;
 import com.grupp5.sf2api.request.cinema.UpdateCinemaRequest;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public interface ICinemaService {
   Cinema deleteCinema(UUID cinemaId);
   Cinema updateCinema(UUID cinemaId, UpdateCinemaRequest request);
   List<Cinema> getAllCinemas();
+  List<MovieSchedule> getSchedule(UUID cinemaId);
 }
