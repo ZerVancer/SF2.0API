@@ -55,4 +55,12 @@ public class Theater {
         this.maxRows = maxRows;
         this.maxColumns = maxColumns;
     }
+
+    public Theater(String name, int totalSeats, int maxRows, int maxColumns, Cinema cinema) {
+        this.name = name;
+        this.totalSeats = totalSeats;
+        this.maxRows = maxRows;
+        this.maxColumns = maxColumns;
+        this.cinema = cinema;
+    }
 }

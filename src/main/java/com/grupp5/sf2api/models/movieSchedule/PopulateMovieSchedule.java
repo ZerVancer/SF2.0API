@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @AllArgsConstructor
 @Component
@@ -28,20 +27,20 @@ public class PopulateMovieSchedule implements CommandLineRunner {
 
         List<MovieSchedule> schedules = new ArrayList<>();
 
-        Movie m1 = movieRepository.findByMovieId(UUID.fromString("cbcc90b9-9587-473e-8c8a-004e318f16ff"))
+        Movie m1 = movieRepository.findByTitle("Rental Family")
                 .orElseThrow(MovieDoesntExistException::new);
 
-        Movie m2 = movieRepository.findByMovieId(UUID.fromString("304b1ae6-d24f-4cbd-864d-dc4c5acbc676"))
+        Movie m2 = movieRepository.findByTitle("V for Vendetta")
                 .orElseThrow((MovieDoesntExistException::new));
 
-        Theater t1 = theaterRepository.findByTheaterId(UUID.fromString("7a58627e-5c65-4fdd-939d-c804643d7448")).
-                orElseThrow(RuntimeException::new);
+        Theater t1 = theaterRepository.findByName("Salong 1")
+                .orElseThrow(RuntimeException::new);
 
-        Theater t2 = theaterRepository.findByTheaterId(UUID.fromString("a90dab09-535d-4eb7-b9b5-7b668543a4b2")).
-                orElseThrow(RuntimeException::new);
+        Theater t2 = theaterRepository.findByName("Salong 2")
+                .orElseThrow(RuntimeException::new);
 
-        Theater t3 = theaterRepository.findByTheaterId(UUID.fromString("5bb37295-31aa-4d95-a3cb-6277579e7551")).
-                orElseThrow(RuntimeException::new);
+        Theater t3 = theaterRepository.findByName("Salong 3")
+                .orElseThrow(RuntimeException::new);
 
         MovieSchedule s1 = new MovieSchedule(
                 LocalDateTime.of(2026,2,1,18,30,0),

@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, UUID> {
     Optional<Movie> findByMovieId(UUID movieId);
+
+    Optional<Movie> findByTitle(String title);
 }
