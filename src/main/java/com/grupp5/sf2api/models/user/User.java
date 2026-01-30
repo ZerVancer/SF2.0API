@@ -1,5 +1,6 @@
 package com.grupp5.sf2api.models.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.grupp5.sf2api.models.tickets.Ticket;
 import jakarta.persistence.*;
@@ -34,7 +35,7 @@ public class User {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @JsonManagedReference
+    @JsonBackReference
     private List<Ticket> tickets;
 
     // Constructors

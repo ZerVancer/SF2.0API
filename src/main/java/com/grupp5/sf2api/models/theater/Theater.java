@@ -1,6 +1,5 @@
 package com.grupp5.sf2api.models.theater;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.grupp5.sf2api.models.cinema.Cinema;
 import com.grupp5.sf2api.models.tickets.Ticket;
 import jakarta.persistence.*;
@@ -40,12 +39,8 @@ public class Theater {
     @JoinColumn(name = "cinema_id")
     private Cinema cinema;
 
-    @OneToMany(
-            mappedBy = "theater",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @JsonManagedReference
+    @OneToMany
+    @JoinColumn(name = "tickets")
     private List<Ticket> tickets = new ArrayList<>();
 
     //Constructors

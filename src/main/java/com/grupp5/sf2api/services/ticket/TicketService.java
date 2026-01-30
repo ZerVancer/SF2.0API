@@ -1,11 +1,12 @@
 package com.grupp5.sf2api.services.ticket;
 
 import com.grupp5.sf2api.exceptions.Ticket.*;
-import com.grupp5.sf2api.exceptions.theater.TheaterDoesntExistException;
+import com.grupp5.sf2api.exceptions.movieSchedule.MovieScheduleDoesntExistException;
 import com.grupp5.sf2api.exceptions.user.UserDoesntExistException;
-import com.grupp5.sf2api.models.theater.Theater;
+import com.grupp5.sf2api.models.movieSchedule.MovieSchedule;
 import com.grupp5.sf2api.models.tickets.Ticket;
 import com.grupp5.sf2api.models.user.User;
+import com.grupp5.sf2api.repositories.movieSchedule.MovieScheduleRepository;
 import com.grupp5.sf2api.repositories.theater.TheaterRepository;
 import com.grupp5.sf2api.repositories.ticket.TicketRepository;
 import com.grupp5.sf2api.repositories.user.UserRepository;
@@ -22,25 +23,29 @@ import java.util.UUID;
 public class TicketService implements ITicketService {
 
     private TicketRepository ticketRepository;
-    private final TheaterRepository theaterRepository;
     private final UserRepository userRepository;
+    private final TheaterRepository theaterRepository;
+    private final MovieScheduleRepository movieScheduleRepository;
 
     @Override
     public Ticket createTicket(CreateTicketRequest request) {
-        Theater theater = theaterRepository.findByTheaterId(request.theaterId())
-                .orElseThrow(() -> new TheaterDoesntExistException());
-
-        boolean seatBooked = ticketRepository.existsByTheaterAndSeatValue(theater, request.seatValue());
 
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> new UserDoesntExistException());
 
-        if (seatBooked) {
-            throw new TicketSeatIsAlreadyBookedException();
+        MovieSchedule movieSchedule = movieScheduleRepository.findByMovieScheduleId(request.movieSchedule())
+                .orElseThrow(() -> new MovieScheduleDoesntExistException("Doesn't exists!"));
+
+        UUID theaterId = movieSchedule.getTheater().getTheaterId();
+
+        if (theaterId == null) {
+            throw new MovieScheduleDoesntExistException("Movieschedule doesn't exists in database!");
         }
 
-        if (request.movieName() == null || request.movieName().isBlank()) {
-            throw new TicketMovieNameIsBlankException();
+        boolean seatBooked = ticketRepository.existsByMovieSchedule_Theater_TheaterIdAndSeatValue(theaterId, request.seatValue());
+
+        if (seatBooked) {
+            throw new TicketSeatIsAlreadyBookedException();
         }
 
         if (request.price() == null ||request.price() <= 0) {
@@ -48,10 +53,9 @@ public class TicketService implements ITicketService {
         }
 
         Ticket ticket = new Ticket(
-                request.movieName(),
                 request.price(),
-                theater,
                 user,
+                movieSchedule,
                 request.seatValue()
         );
 
@@ -70,18 +74,20 @@ public class TicketService implements ITicketService {
             throw new TicketSeatValueIsZeroOrBelowException();
         }
 
-        boolean seatAlreadyBooked = ticketRepository.existsByTheaterAndSeatValueAndTicketIdNot(
-                ticket.getTheater(),
+        UUID theaterId = ticket.getMovieSchedule().getTheater().getTheaterId();
+
+        if (theaterId == null) {
+            throw new MovieScheduleDoesntExistException("Movieschedule doesn't exists in database!");
+        }
+
+        boolean seatAlreadyBooked = ticketRepository.existsByMovieSchedule_Theater_TheaterIdAndSeatValueAndTicketIdNot(
+                theaterId,
                 newSeatValue,
                 ticket.getTicketId()
         );
 
         if (seatAlreadyBooked) {
             throw new TicketSeatIsAlreadyBookedException();
-        }
-
-        if (request.movieName() != null && !request.movieName().isBlank()) {
-            ticket.setMovieName(request.movieName());
         }
 
         if (request.seatValue() != null) {
