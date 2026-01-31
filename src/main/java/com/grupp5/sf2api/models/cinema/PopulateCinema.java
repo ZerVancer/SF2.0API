@@ -3,6 +3,7 @@ package com.grupp5.sf2api.models.cinema;
 import com.grupp5.sf2api.repositories.cinema.CinemaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Component
+@Order(2)
 public class PopulateCinema implements CommandLineRunner {
   private CinemaRepository cinemaRepository;
 
