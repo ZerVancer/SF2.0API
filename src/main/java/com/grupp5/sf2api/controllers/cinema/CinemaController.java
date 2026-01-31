@@ -4,6 +4,7 @@ import com.grupp5.sf2api.dtos.cinema.DeleteCinemaDto;
 import com.grupp5.sf2api.dtos.cinema.RegisterCinemaDto;
 import com.grupp5.sf2api.dtos.cinema.UpdateCinemaDto;
 import com.grupp5.sf2api.models.cinema.Cinema;
+import com.grupp5.sf2api.models.movieSchedule.MovieSchedule;
 import com.grupp5.sf2api.request.cinema.RegisterCinemaRequest;
 import com.grupp5.sf2api.request.cinema.UpdateCinemaRequest;
 import com.grupp5.sf2api.services.cinema.CinemaService;
@@ -47,5 +48,10 @@ public class CinemaController {
   @GetMapping("/get-all")
   public ResponseEntity<List<Cinema>> getCinemas() {
     return ResponseEntity.ok(cinemaService.getAllCinemas());
+  }
+
+  @GetMapping("/get-schedule/{cinemaId}")
+  public ResponseEntity<List<MovieSchedule>> getSchedule(@PathVariable UUID cinemaId) {
+    return ResponseEntity.ok(cinemaService.getSchedule(cinemaId));
   }
 }
