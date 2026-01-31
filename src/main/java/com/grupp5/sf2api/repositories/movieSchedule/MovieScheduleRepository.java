@@ -11,5 +11,5 @@ import java.util.UUID;
 @Repository
 public interface MovieScheduleRepository extends JpaRepository<MovieSchedule, UUID> {
     Optional<MovieSchedule> findByMovieScheduleId(UUID uuid);
-    List<MovieSchedule> findAllByTheater_Cinema_CinemaId(UUID cinemaId);
+    Optional<MovieSchedule> getTheater_TheaterIdByMovieScheduleId(UUID scheduleId);
 }
