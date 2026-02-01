@@ -1,8 +1,8 @@
 package com.grupp5.sf2api.dtos.ticket;
 
+import com.grupp5.sf2api.dtos.user.GetUserDto;
 import com.grupp5.sf2api.models.movieSchedule.MovieSchedule;
 import com.grupp5.sf2api.models.tickets.Ticket;
-import com.grupp5.sf2api.models.user.User;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -11,7 +11,7 @@ public record CreateTicketDto(
         UUID ticketId,
         Double price,
         LocalDateTime bookedAt,
-        User user,
+        GetUserDto user,
         MovieSchedule movieSchedule,
         int seatValue
 ) {
@@ -20,7 +20,7 @@ public record CreateTicketDto(
                 ticket.getTicketId(),
                 ticket.getPrice(),
                 ticket.getBookedAt(),
-                ticket.getUser(),
+                GetUserDto.from(ticket.getUser()),
                 ticket.getMovieSchedule(),
                 ticket.getSeatValue()
         );

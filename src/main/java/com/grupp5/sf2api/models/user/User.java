@@ -30,6 +30,9 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private AccountType accountType;
+
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -44,6 +47,7 @@ public class User {
     public User(String email, String passwordHash) {
         this.email = email;
         this.passwordHash = passwordHash;
+        this.accountType = AccountType.USER;
         this.createdAt = LocalDateTime.now();
     }
 }
