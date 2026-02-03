@@ -29,15 +29,15 @@ public class UserService implements IUserService {
     public User registerNewUser(User user) {
 
         if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new EmailIsEmptyException("Email cannot be empty!");
+            throw new EmailIsEmptyException();
         }
 
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException("User already exists in database");
+            throw new UserAlreadyExistsException();
         }
 
         if (user.getPasswordHash() == null || user.getPasswordHash().isBlank()) {
-            throw new PasswordIsEmptyException("Password cannot be empty!");
+            throw new PasswordIsEmptyException();
         }
 
         user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
@@ -47,10 +47,8 @@ public class UserService implements IUserService {
 
     @Override
     public String loginUser(String email, String password) {
-        User userExists = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserDoesntExistException());
-
-        User user = userExists;
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserDoesntExistException::new);
 
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             return null;
@@ -62,7 +60,7 @@ public class UserService implements IUserService {
     @Override
     public User updateUser(UUID userid, UpdateUserRequest request) {
         User user = userRepository.findById(userid)
-                .orElseThrow(() -> new UserDoesntExistException());
+                .orElseThrow(UserDoesntExistException::new);
 
         if (request.email() != null && !request.email().isBlank()) {
             user.setEmail(request.email());
@@ -86,7 +84,7 @@ public class UserService implements IUserService {
     @Override
     public DeletedUserDto deleteUser(UUID userid) {
         User user = userRepository.findById(userid)
-                .orElseThrow(() -> new UserDoesntExistException());
+                .orElseThrow(UserDoesntExistException::new);
 
         userRepository.delete(user);
 
@@ -96,7 +94,7 @@ public class UserService implements IUserService {
     @Override
     public List<UserAndTicketsDto> getAllTickets(UUID userid) {
         User user = userRepository.findById(userid)
-                .orElseThrow(() -> new UserDoesntExistException());
+                .orElseThrow(UserDoesntExistException::new);
 
         return List.of(UserAndTicketsDto.from(user));
     }
@@ -104,7 +102,7 @@ public class UserService implements IUserService {
     @Override
     public User getSpecificUser(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserDoesntExistException());
+                .orElseThrow(UserDoesntExistException::new);
     }
 
 }
