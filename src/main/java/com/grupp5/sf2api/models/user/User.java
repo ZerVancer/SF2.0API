@@ -1,10 +1,11 @@
 package com.grupp5.sf2api.models.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.grupp5.sf2api.models.tickets.Ticket;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -15,8 +16,9 @@ import java.util.UUID;
 @Table(name = "users")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID userId;
@@ -42,8 +44,6 @@ public class User {
     private List<Ticket> tickets;
 
     // Constructors
-    protected User() {}
-
     public User(String email, String passwordHash) {
         this.email = email;
         this.passwordHash = passwordHash;

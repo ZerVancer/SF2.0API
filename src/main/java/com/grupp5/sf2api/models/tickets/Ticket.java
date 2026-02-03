@@ -2,10 +2,11 @@ package com.grupp5.sf2api.models.tickets;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.grupp5.sf2api.models.movieSchedule.MovieSchedule;
-import com.grupp5.sf2api.models.theater.Theater;
 import com.grupp5.sf2api.models.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -15,8 +16,9 @@ import java.util.UUID;
 @Table(name = "tickets")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ticket {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID ticketId;
@@ -28,6 +30,7 @@ public class Ticket {
     private Double price;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "movie_schedule_id")
     @JsonBackReference
     private MovieSchedule movieSchedule;
 
@@ -36,11 +39,10 @@ public class Ticket {
     @JsonBackReference
     private User user;
 
-    @Column(name = "seat_value", nullable = false)
+    @Column(nullable = false)
     private int seatValue;
 
-    protected Ticket() {}
-
+    //Constructors
     public Ticket(Double price, User user, MovieSchedule movieSchedule, int seatValue) {
         this.bookedAt = LocalDateTime.now();
         this.price = price;

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "movieSchedule")
+@Table(name = "movie_schedules")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,15 +22,14 @@ public class MovieSchedule {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID movieScheduleId;
 
-    @Column
     private LocalDateTime startTime;
 
     @ManyToOne
-    @JoinColumn(name = "movieId")
+    @JoinColumn(name = "movie_id")
     private Movie movie;
 
     @ManyToOne
-    @JoinColumn(name = "theaterId")
+    @JoinColumn(name = "theater_id")
     private Theater theater;
 
     //Constructors

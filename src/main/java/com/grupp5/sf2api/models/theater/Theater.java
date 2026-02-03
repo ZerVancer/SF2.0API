@@ -23,16 +23,16 @@ public class Theater {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID theaterId;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private int totalSeats;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private int maxRows;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private int maxColumns;
 
     @ManyToOne
@@ -40,7 +40,6 @@ public class Theater {
     private Cinema cinema;
 
     @OneToMany
-    @JoinColumn(name = "tickets")
     private List<Ticket> tickets = new ArrayList<>();
 
     //Constructors

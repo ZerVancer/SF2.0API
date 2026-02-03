@@ -1,6 +1,6 @@
 package com.grupp5.sf2api.models.user;
 
-// Vi kommer inte använda ADMIN
+// admin currently unused
 public enum AccountType {
     USER, ADMIN
 }
