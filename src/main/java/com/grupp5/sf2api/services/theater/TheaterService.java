@@ -7,18 +7,17 @@ import com.grupp5.sf2api.models.theater.Theater;
 import com.grupp5.sf2api.repositories.cinema.CinemaRepository;
 import com.grupp5.sf2api.repositories.theater.TheaterRepository;
 import com.grupp5.sf2api.request.theater.UpdateTheaterRequest;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class TheaterService implements ITheaterService {
-
-    private final TheaterRepository theaterRepository;
-    private final CinemaRepository cinemaRepository;
+    private TheaterRepository theaterRepository;
+    private CinemaRepository cinemaRepository;
 
     @Override
     public Theater createTheater(Theater theater) {
@@ -26,30 +25,27 @@ public class TheaterService implements ITheaterService {
     }
 
     @Override
-    public Theater updateTheater(UUID theaterid, UpdateTheaterRequest request) {
-        Theater theaterExists = theaterRepository.findByTheaterId(theaterid)
-                .orElseThrow(() -> new TheaterDoesntExistException());
+    public Theater updateTheater(UUID theaterId, UpdateTheaterRequest request) {
+        Theater theater = theaterRepository.findByTheaterId(theaterId)
+                .orElseThrow(TheaterDoesntExistException::new);
 
-        if (request.name() != null && !request.name().isBlank()) {
-            theaterExists.setName(request.name());
-        }
+        if (request.name() != null && !request.name().isBlank()) theater.setName(request.name());
 
-        if (request.totalSeats() > 0) {
-            theaterExists.setTotalSeats(request.totalSeats());
-        }
 
-        if (request.maxRows() > 0) {
-            theaterExists.setMaxRows(request.maxRows());
-        }
+        if (request.totalSeats() > 0) theater.setTotalSeats(request.totalSeats());
 
-        if (request.maxColumns() > 0) {
-            theaterExists.setMaxColumns(request.maxColumns());
-        }
 
-        Cinema cinema = cinemaRepository.findByCinemaId(request.cinemaId()).orElseThrow(CinemaDoesntExistException::new);
-        theaterExists.setCinema(cinema);
+        if (request.maxRows() > 0) theater.setMaxRows(request.maxRows());
 
-        return theaterRepository.save(theaterExists);
+
+        if (request.maxColumns() > 0) theater.setMaxColumns(request.maxColumns());
+
+        Cinema cinema = cinemaRepository
+                .findByCinemaId(request.cinemaId())
+                .orElseThrow(CinemaDoesntExistException::new);
+        theater.setCinema(cinema);
+
+        return theaterRepository.save(theater);
         }
 
     @Override
@@ -58,13 +54,12 @@ public class TheaterService implements ITheaterService {
     }
 
     @Override
-    public Theater deleteTheater(UUID theaterid) {
-        Theater deletedTheater = theaterRepository.findByTheaterId(theaterid)
-                .orElseThrow(() -> new TheaterDoesntExistException());
+    public Theater deleteTheater(UUID theaterId) {
+        Theater deletedTheater = theaterRepository.findByTheaterId(theaterId)
+                .orElseThrow(TheaterDoesntExistException::new);
 
         theaterRepository.delete(deletedTheater);
 
         return deletedTheater;
     }
-
 }

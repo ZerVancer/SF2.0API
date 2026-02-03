@@ -19,17 +19,19 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class MovieScheduleService {
+public class MovieScheduleService implements IMovieScheduleService {
     private MovieScheduleRepository movieScheduleRepository;
     private TheaterRepository theaterRepository;
     private MovieRepository movieRepository;
 
     public MovieSchedule registerNewMovieSchedule(LocalDateTime startTime, UUID movieId, UUID theaterId) {
-        Movie movie = movieRepository.findByMovieId(movieId)
-                .orElseThrow(() -> new MovieDoesntExistException());
+        Movie movie = movieRepository
+                .findByMovieId(movieId)
+                .orElseThrow(MovieDoesntExistException::new);
 
-        Theater theater = theaterRepository.findByTheaterId(theaterId)
-                .orElseThrow(() -> new TheaterDoesntExistException());
+        Theater theater = theaterRepository
+                .findByTheaterId(theaterId)
+                .orElseThrow(TheaterDoesntExistException::new);
 
         MovieSchedule movieSchedule = new MovieSchedule(
                 startTime,
@@ -37,61 +39,55 @@ public class MovieScheduleService {
                 theater
         );
 
-        Optional<MovieSchedule> existingMovieSchedule =
-                movieScheduleRepository.findByMovieScheduleId(movieSchedule.getMovieScheduleId());
+        Optional<MovieSchedule> existingMovieSchedule = movieScheduleRepository
+                .findByMovieScheduleId(movieSchedule.getMovieScheduleId());
 
-        if (existingMovieSchedule.isPresent()) {
-            throw new MovieScheduleAlreadyExistsException("Movie schedule already exists in database!");
-        }
+        if (existingMovieSchedule.isPresent()) throw new MovieScheduleAlreadyExistsException();
 
-        checkIfFieldsAreNull(movieSchedule);
+        if (movieSchedule.getStartTime() == null) throw new StartTimeIsEmptyException();
 
-        return movieScheduleRepository.save(movieSchedule);
-    }
+        if (movieSchedule.getMovie() == null) throw new MovieIdIsEmptyException();
 
-    public MovieSchedule updateMovieSchedule(UUID movieScheduleId, LocalDateTime startTime, UUID movieId, UUID theaterId) {
-        MovieSchedule movieSchedule = movieScheduleRepository.findByMovieScheduleId(movieScheduleId)
-                .orElseThrow(() -> new MovieScheduleDoesntExistException("Movie schedule doesn't exist!"));
-
-        Movie movie = movieRepository.findByMovieId(movieId)
-                .orElseThrow(() -> new MovieDoesntExistException());
-
-        Theater theater = theaterRepository.findByTheaterId(theaterId)
-                .orElseThrow(() -> new TheaterDoesntExistException());
-
-        movieSchedule.setStartTime(startTime);
-        movieSchedule.setMovie(movie);
-        movieSchedule.setTheater(theater);
-
-        checkIfFieldsAreNull(movieSchedule);
+        if (movieSchedule.getTheater() == null) throw new TheaterIdIsEmptyException();
 
         return movieScheduleRepository.save(movieSchedule);
     }
 
     public MovieSchedule deleteMovieSchedule(UUID movieScheduleId) {
-        MovieSchedule movieSchedule = movieScheduleRepository.findByMovieScheduleId(movieScheduleId)
-                .orElseThrow(() -> new MovieScheduleDoesntExistException("Movie schedule doesn't exist!"));
+        MovieSchedule movieSchedule = movieScheduleRepository
+                .findByMovieScheduleId(movieScheduleId)
+                .orElseThrow(MovieScheduleDoesntExistException::new);
 
         movieScheduleRepository.deleteById(movieScheduleId);
 
         return movieSchedule;
     }
 
-    public List<MovieSchedule> getAllMovieSchedules() {
-        return movieScheduleRepository.findAll();
+    public MovieSchedule updateMovieSchedule(UUID movieScheduleId, LocalDateTime startTime, UUID movieId, UUID theaterId) {
+        MovieSchedule movieSchedule = movieScheduleRepository
+                .findByMovieScheduleId(movieScheduleId)
+                .orElseThrow(MovieScheduleDoesntExistException::new);
+
+        if (startTime != null) movieSchedule.setStartTime(startTime);
+
+        if (movieId != null) {
+            Movie movie = movieRepository
+                    .findByMovieId(movieId)
+                    .orElseThrow(MovieDoesntExistException::new);
+            movieSchedule.setMovie(movie);
+        }
+
+        if (theaterId != null) {
+            Theater theater = theaterRepository
+                    .findByTheaterId(theaterId)
+                    .orElseThrow(TheaterDoesntExistException::new);
+            movieSchedule.setTheater(theater);
+        }
+
+        return movieScheduleRepository.save(movieSchedule);
     }
 
-    private void checkIfFieldsAreNull(MovieSchedule movieSchedule) {
-        if (movieSchedule.getStartTime() == null) {
-            throw new StartTimeIsEmptyException("Start time cannot be empty!");
-        }
-
-        if (movieSchedule.getMovie() == null) {
-            throw new MovieIdIsEmptyException("MovieId cannot be empty!");
-        }
-
-        if (movieSchedule.getTheater() == null) {
-            throw new TheaterIdIsEmptyException("TheaterId cannot be empty!");
-        }
+    public List<MovieSchedule> getAllMovieSchedules() {
+        return movieScheduleRepository.findAll();
     }
 }

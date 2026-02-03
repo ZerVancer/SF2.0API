@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface ITheaterService {
     Theater createTheater(Theater theater);
-    Theater updateTheater(UUID theaterid, UpdateTheaterRequest request);
+    Theater updateTheater(UUID theaterId, UpdateTheaterRequest request);
     List<Theater> getAllTheaters();
-    Theater deleteTheater(UUID theaterid);
+    Theater deleteTheater(UUID theaterId);
 }

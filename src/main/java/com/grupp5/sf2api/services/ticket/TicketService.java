@@ -7,7 +7,6 @@ import com.grupp5.sf2api.models.movieSchedule.MovieSchedule;
 import com.grupp5.sf2api.models.tickets.Ticket;
 import com.grupp5.sf2api.models.user.User;
 import com.grupp5.sf2api.repositories.movieSchedule.MovieScheduleRepository;
-import com.grupp5.sf2api.repositories.theater.TheaterRepository;
 import com.grupp5.sf2api.repositories.ticket.TicketRepository;
 import com.grupp5.sf2api.repositories.user.UserRepository;
 import com.grupp5.sf2api.request.ticket.CreateTicketRequest;
@@ -21,10 +20,8 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class TicketService implements ITicketService {
-
     private TicketRepository ticketRepository;
     private final UserRepository userRepository;
-    private final TheaterRepository theaterRepository;
     private final MovieScheduleRepository movieScheduleRepository;
 
     @Override
@@ -34,12 +31,12 @@ public class TicketService implements ITicketService {
                 .orElseThrow(() -> new UserDoesntExistException());
 
         MovieSchedule movieSchedule = movieScheduleRepository.findByMovieScheduleId(request.movieSchedule())
-                .orElseThrow(() -> new MovieScheduleDoesntExistException("Doesn't exists!"));
+                .orElseThrow(() -> new MovieScheduleDoesntExistException());
 
         UUID theaterId = movieSchedule.getTheater().getTheaterId();
 
         if (theaterId == null) {
-            throw new MovieScheduleDoesntExistException("Movieschedule doesn't exists in database!");
+            throw new MovieScheduleDoesntExistException();
         }
 
         boolean seatBooked = ticketRepository.existsByMovieSchedule_Theater_TheaterIdAndSeatValue(theaterId, request.seatValue());
@@ -77,7 +74,7 @@ public class TicketService implements ITicketService {
         UUID theaterId = ticket.getMovieSchedule().getTheater().getTheaterId();
 
         if (theaterId == null) {
-            throw new MovieScheduleDoesntExistException("Movieschedule doesn't exists in database!");
+            throw new MovieScheduleDoesntExistException();
         }
 
         boolean seatAlreadyBooked = ticketRepository.existsByMovieSchedule_Theater_TheaterIdAndSeatValueAndTicketIdNot(

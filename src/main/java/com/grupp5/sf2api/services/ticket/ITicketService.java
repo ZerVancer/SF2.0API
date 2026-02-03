@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface ITicketService {
     Ticket createTicket(CreateTicketRequest request);
-    Ticket updateTicket(UUID ticketid, UpdateTicketRequest request);
+    Ticket updateTicket(UUID ticketId, UpdateTicketRequest request);
     List<Ticket> getAllTickets();
-    Ticket deleteTicket(UUID ticketid);
+    Ticket deleteTicket(UUID ticketId);
 }

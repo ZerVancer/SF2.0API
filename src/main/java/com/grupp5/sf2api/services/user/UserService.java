@@ -21,7 +21,6 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UserService implements IUserService {
-
     private final JWTService jWTService;
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
