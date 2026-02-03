@@ -15,9 +15,8 @@ import java.util.List;
 public class PopulateMovies implements CommandLineRunner {
   private MovieRepository movieRepository;
 
-  // Used for easy test data
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
     if (!movieRepository.findAll().isEmpty()) return;
 
     List<Movie> movies = new ArrayList<>();

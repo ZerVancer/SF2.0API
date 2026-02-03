@@ -16,7 +16,7 @@ public class PopulateCinema implements CommandLineRunner {
   private CinemaRepository cinemaRepository;
 
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
     if (!cinemaRepository.findAll().isEmpty()) return;
 
     List<Cinema> cinemas = new ArrayList<>();

@@ -8,6 +8,7 @@ import com.grupp5.sf2api.repositories.movieSchedule.MovieScheduleRepository;
 import com.grupp5.sf2api.repositories.theater.TheaterRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Component
+@Order(4)
 public class PopulateMovieSchedule implements CommandLineRunner {
     private MovieScheduleRepository movieScheduleRepository;
     private MovieRepository movieRepository;
