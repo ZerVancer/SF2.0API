@@ -4,6 +4,7 @@ import com.grupp5.sf2api.exceptions.Ticket.*;
 import com.grupp5.sf2api.exceptions.movieSchedule.MovieScheduleDoesntExistException;
 import com.grupp5.sf2api.exceptions.user.UserDoesntExistException;
 import com.grupp5.sf2api.models.movieSchedule.MovieSchedule;
+import com.grupp5.sf2api.models.theater.Theater;
 import com.grupp5.sf2api.models.tickets.Ticket;
 import com.grupp5.sf2api.models.user.User;
 import com.grupp5.sf2api.repositories.movieSchedule.MovieScheduleRepository;
@@ -24,7 +25,6 @@ public class TicketService implements ITicketService {
 
     private TicketRepository ticketRepository;
     private final UserRepository userRepository;
-    private final TheaterRepository theaterRepository;
     private final MovieScheduleRepository movieScheduleRepository;
 
     @Override
@@ -110,5 +110,9 @@ public class TicketService implements ITicketService {
         ticketRepository.delete(ticket);
 
         return ticket;
+    }
+
+    public List<Ticket> getAllTicketsByTheaterId(UUID theaterId) {
+        return ticketRepository.findAllByMovieSchedule_Theater_TheaterId(theaterId);
     }
 }

@@ -50,4 +50,8 @@ public class TicketController {
         return ResponseEntity.ok(DeleteTicketDto.from(deletedTicket));
     }
 
+    @GetMapping("/ticketsByTheaterId/{theaterId}")
+    public ResponseEntity<List<Ticket>> getTickets(@PathVariable UUID theaterId) {
+        return ResponseEntity.ok(ticketService.getAllTicketsByTheaterId(theaterId));
+    }
 }

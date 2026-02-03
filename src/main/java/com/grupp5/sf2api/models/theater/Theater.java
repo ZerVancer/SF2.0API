@@ -39,10 +39,6 @@ public class Theater {
     @JoinColumn(name = "cinema_id", nullable = false)
     private Cinema cinema;
 
-    @OneToMany
-    @JoinColumn(name = "tickets")
-    private List<Ticket> tickets = new ArrayList<>();
-
     //Constructor
     public Theater(String name, int totalSeats, int maxRows, int maxColumns, Cinema cinema) {
         this.name = name;
