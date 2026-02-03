@@ -28,10 +28,10 @@ public class TicketService implements ITicketService {
     public Ticket createTicket(CreateTicketRequest request) {
 
         User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new UserDoesntExistException());
+                .orElseThrow(UserDoesntExistException::new);
 
         MovieSchedule movieSchedule = movieScheduleRepository.findByMovieScheduleId(request.movieSchedule())
-                .orElseThrow(() -> new MovieScheduleDoesntExistException());
+                .orElseThrow(MovieScheduleDoesntExistException::new);
 
         UUID theaterId = movieSchedule.getTheater().getTheaterId();
 
@@ -102,7 +102,7 @@ public class TicketService implements ITicketService {
     @Override
     public Ticket deleteTicket(UUID ticketid) {
         Ticket ticket = ticketRepository.findById(ticketid)
-                .orElseThrow(() -> new TicketDontExistsException());
+                .orElseThrow(TicketDontExistsException::new);
 
         ticketRepository.delete(ticket);
 
