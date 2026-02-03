@@ -8,12 +8,14 @@ import java.util.UUID;
 public record GetUserDto(
         UUID userId,
         String email,
+        String accountType,
         LocalDateTime createdAt
 ) {
     public static GetUserDto from(User user) {
         return new GetUserDto(
                 user.getUserId(),
                 user.getEmail(),
+                user.getAccountType().name(),
                 user.getCreatedAt()
         );
     }

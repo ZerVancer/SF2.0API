@@ -7,11 +7,10 @@ import com.grupp5.sf2api.exceptions.user.EmailIsEmptyException;
 import com.grupp5.sf2api.exceptions.user.PasswordIsEmptyException;
 import com.grupp5.sf2api.exceptions.user.UserAlreadyExistsException;
 import com.grupp5.sf2api.exceptions.user.UserDoesntExistException;
-import com.grupp5.sf2api.models.tickets.Ticket;
 import com.grupp5.sf2api.models.user.User;
-import com.grupp5.sf2api.repositories.ticket.TicketRepository;
 import com.grupp5.sf2api.repositories.user.UserRepository;
 import com.grupp5.sf2api.request.user.UpdateUserRequest;
+import com.grupp5.sf2api.utils.JWTService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,8 +22,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserService implements IUserService {
 
+    private final JWTService jWTService;
     private UserRepository userRepository;
-    private TicketRepository ticketRepository;
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -45,6 +44,20 @@ public class UserService implements IUserService {
         user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public String loginUser(String email, String password) {
+        User userExists = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserDoesntExistException());
+
+        User user = userExists;
+
+        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
+            return null;
+        }
+
+        return jWTService.generateToken(user.getUserId());
     }
 
     @Override
@@ -87,6 +100,12 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new UserDoesntExistException());
 
         return List.of(UserAndTicketsDto.from(user));
+    }
+
+    @Override
+    public User getSpecificUser(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserDoesntExistException());
     }
 
 }
