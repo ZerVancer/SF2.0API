@@ -11,6 +11,10 @@ public record RegisterUserDto(
         LocalDateTime createdAt
 ) {
     public static RegisterUserDto from(User user) {
-        return new RegisterUserDto(user.getUserId(), user.getEmail(), user.getCreatedAt());
+        return new RegisterUserDto(
+                user.getUserId(),
+                user.getEmail(),
+                user.getCreatedAt()
+        );
     }
 }

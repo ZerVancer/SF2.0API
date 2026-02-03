@@ -5,9 +5,9 @@ import com.grupp5.sf2api.models.movie.Movie;
 import java.util.UUID;
 
 public record DeleteMovieDto(
-    UUID movieId
+        UUID movieId
 ) {
-  public static DeleteMovieDto from(Movie movie) {
-    return new DeleteMovieDto(movie.getMovieId());
-  }
+    public static DeleteMovieDto from(Movie movie) {
+        return new DeleteMovieDto(movie.getMovieId());
+    }
 }

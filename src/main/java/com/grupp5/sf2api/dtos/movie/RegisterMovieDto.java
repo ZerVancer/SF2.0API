@@ -5,9 +5,9 @@ import com.grupp5.sf2api.models.movie.Movie;
 import java.util.UUID;
 
 public record RegisterMovieDto(
-    UUID movieId
+        UUID movieId
 ) {
-  public static RegisterMovieDto from(Movie movie) {
-    return new RegisterMovieDto(movie.getMovieId());
-  }
+    public static RegisterMovieDto from(Movie movie) {
+        return new RegisterMovieDto(movie.getMovieId());
+    }
 }

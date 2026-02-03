@@ -1,8 +1,6 @@
 package com.grupp5.sf2api.dtos.movieSchedule;
 
-import com.grupp5.sf2api.dtos.user.UpdatedUserDto;
 import com.grupp5.sf2api.models.movieSchedule.MovieSchedule;
-import com.grupp5.sf2api.models.user.User;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

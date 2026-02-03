@@ -9,6 +9,9 @@ public record DeletedUserDto(
         String email
 ) {
     public static DeletedUserDto from(User user) {
-        return new DeletedUserDto(user.getUserId(), user.getEmail());
+        return new DeletedUserDto(
+                user.getUserId(),
+                user.getEmail()
+        );
     }
 }
