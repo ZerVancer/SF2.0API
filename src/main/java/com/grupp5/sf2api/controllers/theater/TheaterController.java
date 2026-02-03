@@ -3,9 +3,13 @@ package com.grupp5.sf2api.controllers.theater;
 import com.grupp5.sf2api.dtos.theater.CreateTheaterDto;
 import com.grupp5.sf2api.dtos.theater.DeleteTheaterDto;
 import com.grupp5.sf2api.dtos.theater.UpdateTheaterDto;
+import com.grupp5.sf2api.exceptions.cinema.CinemaDoesntExistException;
+import com.grupp5.sf2api.models.cinema.Cinema;
 import com.grupp5.sf2api.models.theater.Theater;
+import com.grupp5.sf2api.repositories.cinema.CinemaRepository;
 import com.grupp5.sf2api.request.theater.CreateTheaterRequest;
 import com.grupp5.sf2api.request.theater.UpdateTheaterRequest;
+import com.grupp5.sf2api.services.cinema.CinemaService;
 import com.grupp5.sf2api.services.theater.TheaterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +24,13 @@ import java.util.UUID;
 public class TheaterController {
 
     private final TheaterService theaterService;
+    private final CinemaService cinemaService;
 
     @PostMapping("/create")
     public ResponseEntity<CreateTheaterDto> createTheater(@RequestBody CreateTheaterRequest request) {
-        Theater newTheater = new Theater(request.name(), request.totalSeats(), request.maxRows(), request.maxColumns());
+        Cinema cinema = cinemaService.findCinemaById(request.cinemaId());
+
+        Theater newTheater = new Theater(request.name(), request.totalSeats(), request.maxRows(), request.maxColumns(), cinema);
 
         Theater theater = theaterService.createTheater(newTheater);
 

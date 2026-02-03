@@ -65,4 +65,8 @@ public class CinemaService implements ICinemaService{
   public List<MovieSchedule> getSchedule(UUID cinemaId) {
     return movieScheduleRepository.findAllByTheater_Cinema_CinemaId(cinemaId);
   }
+
+  public Cinema findCinemaById(UUID cinemaId) {
+    return cinemaRepository.findByCinemaId(cinemaId).orElseThrow(CinemaDoesntExistException::new);
+  }
 }
