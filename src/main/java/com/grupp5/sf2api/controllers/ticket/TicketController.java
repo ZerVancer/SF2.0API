@@ -19,7 +19,6 @@ import java.util.UUID;
 @RequestMapping("/ticket")
 @AllArgsConstructor
 public class TicketController {
-
     private TicketService ticketService;
 
     @PostMapping("/create")
@@ -27,27 +26,31 @@ public class TicketController {
 
         Ticket newTicket = ticketService.createTicket(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(CreateTicketDto.from(newTicket));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(CreateTicketDto.from(newTicket));
+    }
+
+    @DeleteMapping("/delete/{ticketId}")
+    public ResponseEntity<DeleteTicketDto> deleteTicket(@PathVariable UUID ticketId) {
+        Ticket deletedTicket = ticketService.deleteTicket(ticketId);
+
+        return ResponseEntity.ok(DeleteTicketDto.from(deletedTicket));
+    }
+
+    @PutMapping("/update/{ticketId}")
+    public ResponseEntity<UpdateTicketDto> updateTicket(@PathVariable UUID ticketId,
+                                                        @RequestBody UpdateTicketRequest request) {
+        Ticket updatedTicket = ticketService.updateTicket(
+                ticketId,
+                request
+        );
+
+        return ResponseEntity.ok(UpdateTicketDto.from(updatedTicket));
     }
 
     @GetMapping("/tickets")
     public ResponseEntity<List<Ticket>> createTicket() {
         return ResponseEntity.ok(ticketService.getAllTickets());
     }
-
-    @PutMapping("/update/{ticketid}")
-    public ResponseEntity<UpdateTicketDto> updateTicket(
-            @PathVariable UUID ticketid,
-            @RequestBody UpdateTicketRequest request) {
-        Ticket updatedTicket = ticketService.updateTicket(ticketid, request);
-        return ResponseEntity.ok(UpdateTicketDto.from(updatedTicket));
-    }
-
-    @DeleteMapping("/delete/{ticketid}")
-    public ResponseEntity<DeleteTicketDto> deleteTicket(@PathVariable UUID ticketid) {
-        Ticket deletedTicket = ticketService.deleteTicket(ticketid);
-
-        return ResponseEntity.ok(DeleteTicketDto.from(deletedTicket));
-    }
-
 }

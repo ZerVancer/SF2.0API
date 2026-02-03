@@ -18,24 +18,37 @@ import java.util.UUID;
 @RequestMapping("/theater")
 @RequiredArgsConstructor
 public class TheaterController {
-
     private final TheaterService theaterService;
 
     @PostMapping("/create")
     public ResponseEntity<CreateTheaterDto> createTheater(@RequestBody CreateTheaterRequest request) {
-        Theater newTheater = new Theater(request.name(), request.totalSeats(), request.maxRows(), request.maxColumns());
+        Theater newTheater = new Theater(
+                request.name(),
+                request.totalSeats(),
+                request.maxRows(),
+                request.maxColumns()
+        );
 
         Theater theater = theaterService.createTheater(newTheater);
 
         return ResponseEntity.ok(CreateTheaterDto.from(theater));
     }
 
+    @DeleteMapping("/delete/{theaterId}")
+    public ResponseEntity<DeleteTheaterDto> deleteTheater(@PathVariable UUID theaterId) {
+        Theater theater = theaterService.deleteTheater(theaterId);
+
+        return ResponseEntity.ok(DeleteTheaterDto.from(theater));
+    }
+
 
     @PutMapping("/update/{theaterId}")
-    public ResponseEntity<UpdateTheaterDto> updateTheater(
-            @PathVariable UUID theaterId,
-            @RequestBody UpdateTheaterRequest request) {
-        Theater updateTheater = theaterService.updateTheater(theaterId, request);
+    public ResponseEntity<UpdateTheaterDto> updateTheater(@PathVariable UUID theaterId,
+                                                          @RequestBody UpdateTheaterRequest request) {
+        Theater updateTheater = theaterService.updateTheater(
+                theaterId,
+                request
+        );
 
         return ResponseEntity.ok(UpdateTheaterDto.from(updateTheater));
     }
@@ -46,16 +59,11 @@ public class TheaterController {
         List<Theater> theaters = theaterService.getAllTheaters();
 
         if (theaters.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity
+                    .noContent()
+                    .build();
         }
 
         return ResponseEntity.ok(theaters);
-    }
-
-    @DeleteMapping("/delete/{theaterId}")
-    public ResponseEntity<DeleteTheaterDto> deleteTheater(@PathVariable UUID theaterId) {
-        Theater theater = theaterService.deleteTheater(theaterId);
-
-        return ResponseEntity.ok(DeleteTheaterDto.from(theater));
     }
 }

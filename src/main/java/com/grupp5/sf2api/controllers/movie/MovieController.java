@@ -19,33 +19,40 @@ import java.util.UUID;
 @RequestMapping("/movie")
 @AllArgsConstructor
 public class MovieController {
-  private MovieService movieService;
+    private MovieService movieService;
 
-  @PostMapping("/register")
-  public ResponseEntity<RegisterMovieDto> registerMovie(@RequestBody RegisterMovieRequest request) {
-    Movie movie = new Movie(request.title(), request.durationSeconds(), request.description());
+    @PostMapping("/register")
+    public ResponseEntity<RegisterMovieDto> registerMovie(@RequestBody RegisterMovieRequest request) {
+        Movie movie = new Movie(
+                request.title(),
+                request.durationSeconds(),
+                request.description()
+        );
 
-    Movie newMovie = movieService.registerMovie(movie);
+        Movie newMovie = movieService.registerMovie(movie);
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(RegisterMovieDto.from(newMovie));
-  }
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(RegisterMovieDto.from(newMovie));
+    }
 
-  @DeleteMapping("/delete/{movieId}")
-  public ResponseEntity<DeleteMovieDto> deleteMovie(@PathVariable UUID movieId) {
-    Movie movie = movieService.deleteMovie(movieId);
+    @DeleteMapping("/delete/{movieId}")
+    public ResponseEntity<DeleteMovieDto> deleteMovie(@PathVariable UUID movieId) {
+        Movie movie = movieService.deleteMovie(movieId);
 
-    return ResponseEntity.ok(DeleteMovieDto.from(movie));
-  }
+        return ResponseEntity.ok(DeleteMovieDto.from(movie));
+    }
 
-  @PutMapping("/update/{movieId}")
-  public ResponseEntity<UpdateMovieDto> updateMovie(@PathVariable UUID movieId, @RequestBody UpdateMovieRequest request) {
-    Movie movie = movieService.updateMovie(movieId, request);
+    @PutMapping("/update/{movieId}")
+    public ResponseEntity<UpdateMovieDto> updateMovie(@PathVariable UUID movieId,
+                                                      @RequestBody UpdateMovieRequest request) {
+        Movie movie = movieService.updateMovie(movieId, request);
 
-    return ResponseEntity.ok(UpdateMovieDto.from(movie));
-  }
+        return ResponseEntity.ok(UpdateMovieDto.from(movie));
+    }
 
-  @GetMapping("/get-all")
-  public ResponseEntity<List<Movie>> getMovies() {
-    return ResponseEntity.ok(movieService.getAllMovies());
-  }
+    @GetMapping("/movies")
+    public ResponseEntity<List<Movie>> getMovies() {
+        return ResponseEntity.ok(movieService.getAllMovies());
+    }
 }

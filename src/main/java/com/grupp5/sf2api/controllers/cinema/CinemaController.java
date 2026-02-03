@@ -20,38 +20,47 @@ import java.util.UUID;
 @RequestMapping("/cinema")
 @AllArgsConstructor
 public class CinemaController {
-  private CinemaService cinemaService;
+    private CinemaService cinemaService;
 
-  @PostMapping("/register")
-  public ResponseEntity<RegisterCinemaDto> registerCinema(@RequestBody RegisterCinemaRequest request) {
-    Cinema cinema = new Cinema(request.name(), request.location());
+    @PostMapping("/register")
+    public ResponseEntity<RegisterCinemaDto> registerCinema(@RequestBody RegisterCinemaRequest request) {
+        Cinema cinema = new Cinema(
+                request.name(),
+                request.location()
+        );
 
-    Cinema newCinema = cinemaService.registerCinema(cinema);
+        Cinema newCinema = cinemaService.registerCinema(cinema);
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(RegisterCinemaDto.from(newCinema));
-  }
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(RegisterCinemaDto.from(newCinema));
+    }
 
-  @DeleteMapping("/delete/{cinemaId}")
-  public ResponseEntity<DeleteCinemaDto> deleteCinema(@PathVariable UUID cinemaId) {
-    Cinema cinema = cinemaService.deleteCinema(cinemaId);
+    @DeleteMapping("/delete/{cinemaId}")
+    public ResponseEntity<DeleteCinemaDto> deleteCinema(@PathVariable UUID cinemaId) {
+        Cinema cinema = cinemaService.deleteCinema(cinemaId);
 
-    return ResponseEntity.ok(DeleteCinemaDto.from(cinema));
-  }
+        return ResponseEntity.ok(DeleteCinemaDto.from(cinema));
+    }
 
-  @PutMapping("/update/{cinemaId}")
-  public ResponseEntity<UpdateCinemaDto> updateCinema(@PathVariable UUID cinemaId, @RequestBody UpdateCinemaRequest request) {
-    Cinema cinema = cinemaService.updateCinema(cinemaId, request);
+    @PutMapping("/update/{cinemaId}")
+    public ResponseEntity<UpdateCinemaDto> updateCinema(@PathVariable UUID cinemaId,
+                                                        @RequestBody UpdateCinemaRequest request) {
+        Cinema cinema = cinemaService.updateCinema(
+                cinemaId,
+                request
+        );
 
-    return ResponseEntity.ok(UpdateCinemaDto.from(cinema));
-  }
+        return ResponseEntity.ok(UpdateCinemaDto.from(cinema));
+    }
 
-  @GetMapping("/get-all")
-  public ResponseEntity<List<Cinema>> getCinemas() {
-    return ResponseEntity.ok(cinemaService.getAllCinemas());
-  }
+    @GetMapping("/cinemas")
+    public ResponseEntity<List<Cinema>> getCinemas() {
+        return ResponseEntity.ok(cinemaService.getAllCinemas());
+    }
 
-  @GetMapping("/get-schedule/{cinemaId}")
-  public ResponseEntity<List<MovieSchedule>> getSchedule(@PathVariable UUID cinemaId) {
-    return ResponseEntity.ok(cinemaService.getSchedule(cinemaId));
-  }
+    @GetMapping("/get-schedule/{cinemaId}")
+    public ResponseEntity<List<MovieSchedule>> getSchedule(@PathVariable UUID cinemaId) {
+        return ResponseEntity.ok(cinemaService.getSchedule(cinemaId));
+    }
 }

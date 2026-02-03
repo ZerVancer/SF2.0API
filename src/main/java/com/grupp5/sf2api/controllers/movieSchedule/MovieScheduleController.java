@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/schedule")
 @AllArgsConstructor
 public class MovieScheduleController {
     private MovieScheduleService movieScheduleService;
 
-    @PostMapping("/register-schedule")
+    @PostMapping("/register")
     public ResponseEntity<RegisterMovieScheduleDto> registerSchedule(@RequestBody RegisterMovieScheduleRequest request) {
         MovieSchedule newMovieSchedule = movieScheduleService.registerNewMovieSchedule(
                 request.startTime(),
@@ -29,16 +29,21 @@ public class MovieScheduleController {
                 request.theaterId()
         );
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(RegisterMovieScheduleDto
-                        .from(newMovieSchedule)
-                );
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(RegisterMovieScheduleDto.from(newMovieSchedule));
     }
 
-    @PutMapping("/update-schedule/{scheduleId}")
-    public ResponseEntity<UpdateMovieScheduleDto> updateSchedule(
-            @PathVariable UUID scheduleId,
-            @RequestBody UpdateMovieScheduleRequest request) {
+    @DeleteMapping("/delete/{scheduleId}")
+    public ResponseEntity<DeleteMovieScheduleDto> deleteSchedule(@PathVariable UUID scheduleId) {
+        MovieSchedule deletedMovieSchedule = movieScheduleService.deleteMovieSchedule(scheduleId);
+
+        return ResponseEntity.ok(DeleteMovieScheduleDto.from(deletedMovieSchedule));
+    }
+
+    @PutMapping("/update/{scheduleId}")
+    public ResponseEntity<UpdateMovieScheduleDto> updateSchedule(@PathVariable UUID scheduleId,
+                                                                 @RequestBody UpdateMovieScheduleRequest request) {
         MovieSchedule updatedMovieSchedule = movieScheduleService.updateMovieSchedule(
                 scheduleId,
                 request.startTime(),
@@ -46,21 +51,10 @@ public class MovieScheduleController {
                 request.theaterId()
         );
 
-        return ResponseEntity.ok(UpdateMovieScheduleDto
-                .from(updatedMovieSchedule)
-        );
+        return ResponseEntity.ok(UpdateMovieScheduleDto.from(updatedMovieSchedule));
     }
 
-    @DeleteMapping("/delete-schedule/{scheduleId}")
-    public ResponseEntity<DeleteMovieScheduleDto> deleteSchedule(@PathVariable UUID scheduleId) {
-        MovieSchedule deletedMovieSchedule = movieScheduleService.deleteMovieSchedule(scheduleId);
-
-        return ResponseEntity.ok(DeleteMovieScheduleDto.
-                from(deletedMovieSchedule)
-        );
-    }
-
-    @GetMapping("/movie-schedules")
+    @GetMapping("/schedules")
     public ResponseEntity<List<MovieSchedule>> getAllMovieSchedules() {
         return ResponseEntity.ok(movieScheduleService.getAllMovieSchedules());
     }

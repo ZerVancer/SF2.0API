@@ -19,23 +19,24 @@ import java.util.UUID;
 @RequestMapping("/user")
 @AllArgsConstructor
 public class UserController {
-
     private UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<RegisterUserDto> registerNewUser(@RequestBody RegisterUserRequest request) {
-
-        User user = new User(request.email(), request.password());
+        User user = new User(
+                request.email(),
+                request.password()
+        );
 
         User newUser = userService.registerNewUser(user);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(RegisterUserDto.from(newUser));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(RegisterUserDto.from(newUser));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(
-            @RequestBody LoginUserRequest request
-    ) {
+    public ResponseEntity<?> loginUser(@RequestBody LoginUserRequest request) {
         try {
             String token = userService.loginUser(
                     request.email(),
@@ -46,19 +47,27 @@ public class UserController {
                     Map.of("token", token));
 
         } catch (IllegalArgumentException exception) {
-            return ResponseEntity.status(
-                    HttpStatus.UNAUTHORIZED)
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("Error", exception.getMessage()));
         }
     }
 
-    @PutMapping("/update/{userid}")
-    public ResponseEntity<UpdatedUserDto> updateUser(
-            @PathVariable UUID userid,
-            @RequestBody UpdateUserRequest request
-            ) {
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<DeletedUserDto> deleteUser(@PathVariable UUID userId) {
+        DeletedUserDto deletedUser = userService.deleteUser(userId);
 
-        User updatedUser = userService.updateUser(userid, request);
+        return ResponseEntity.ok(deletedUser);
+    }
+
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<UpdatedUserDto> updateUser(@PathVariable UUID userId,
+                                                     @RequestBody UpdateUserRequest request) {
+        User updatedUser = userService.updateUser(
+                userId,
+                request
+        );
+
         return ResponseEntity.ok(UpdatedUserDto.from(updatedUser));
     }
 
@@ -67,30 +76,19 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @DeleteMapping("/delete/{userid}")
-    public ResponseEntity<DeletedUserDto> deleteUser(
-            @PathVariable UUID userid
-    ) {
-        DeletedUserDto deletedUser = userService.deleteUser(userid);
-
-        return ResponseEntity.ok(deletedUser);
-    }
-
-    @GetMapping("/tickets/{userid}")
-    public ResponseEntity<List<UserAndTicketsDto>> getAllTicketsForUser(
-            @PathVariable UUID userid
-    ) {
-        return ResponseEntity.ok(userService.getAllTickets(userid));
+    @GetMapping("/tickets/{userId}")
+    public ResponseEntity<List<UserAndTicketsDto>> getAllTicketsForUser(@PathVariable UUID userId) {
+        return ResponseEntity.ok(userService.getAllTickets(userId));
     }
 
     @GetMapping("/specific/{email}")
-    public ResponseEntity<GetUserDto> getSpecificUser(
-            @PathVariable String email
-            ) {
+    public ResponseEntity<GetUserDto> getSpecificUser(@PathVariable String email) {
         User user = userService.getSpecificUser(email);
 
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity
+                    .notFound()
+                    .build();
         }
 
         return ResponseEntity.ok(GetUserDto.from(user));
